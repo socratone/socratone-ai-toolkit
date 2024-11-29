@@ -4,6 +4,8 @@ import axios from 'axios';
 
 import { useState } from 'react';
 import { Message } from './types';
+import UserMessage from './UserMessage';
+import AssistantMessage from './AssistantMessage';
 
 const systemMessage = {
   role: 'system',
@@ -13,9 +15,12 @@ const systemMessage = {
 const ChatBox = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const sendMessage = async () => {
     if (!inputValue.trim()) return;
+
+    setIsLoading(true);
 
     const newMessage: Message = { role: 'user', content: inputValue };
     setMessages([...messages, newMessage]);
@@ -35,6 +40,8 @@ const ChatBox = () => {
       }
     } catch (error) {
       console.error('Error sending message:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -50,22 +57,18 @@ const ChatBox = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen p-4">
-      <div className="flex-grow overflow-y-auto bg-gray-100 p-4 rounded-lg">
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            className={`mb-2 p-2 rounded-lg whitespace-pre-line ${
-              msg.role === 'user'
-                ? 'bg-blue-100 text-black self-end'
-                : 'bg-white text-black self-start'
-            }`}
-          >
-            {msg.content}
-          </div>
-        ))}
+    <div className="flex flex-col h-screen">
+      <div className="flex-grow overflow-y-auto p-4 flex flex-col gap-3">
+        {messages.map((msg, index) => {
+          if (msg.role === 'user') {
+            return <UserMessage key={index} content={msg.content} />;
+          }
+
+          return <AssistantMessage key={index} content={msg.content} />;
+        })}
+        {isLoading ? <p>Loading...</p> : null}
       </div>
-      <footer className="flex mt-4">
+      <footer className="flex p-4 border-t">
         <textarea
           className="flex-grow border rounded-lg p-2 resize-none"
           placeholder="Type your message..."
