@@ -11,3 +11,7 @@ https://platform.openai.com/settings/organization/api-keys
 ```
 OPENAI_API_KEY=???
 ```
+
+## 사용량 확인
+
+https://platform.openai.com/settings/organization/usage
