@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react'; // useRef 추가
+import { useEffect, useRef, useState } from 'react';
 import { Message } from './types';
 import UserMessage from './UserMessage';
 import AssistantMessage from './AssistantMessage';
@@ -13,10 +13,18 @@ const systemMessage = {
 };
 
 const ChatBox = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>(() => {
+    const savedMessages = localStorage.getItem('messages');
+    return savedMessages ? JSON.parse(savedMessages) : [];
+  });
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null); // 메시지 끝을 참조하는 ref
+
+  const resetMessage = () => {
+    setMessages([]);
+    localStorage.removeItem('messages');
+  };
 
   const sendMessage = async () => {
     if (!inputValue.trim()) return;
@@ -24,15 +32,18 @@ const ChatBox = () => {
     setIsLoading(true);
 
     const newMessage: Message = { role: 'user', content: inputValue };
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
-    setInputValue(''); // 입력 필드 초기화
+    const updatedMessages = [...messages, newMessage];
+    setMessages(updatedMessages);
+    setInputValue('');
+
+    localStorage.setItem('messages', JSON.stringify(updatedMessages));
 
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: [systemMessage, ...messages, newMessage],
+          messages: [systemMessage, ...updatedMessages],
         }),
       });
 
@@ -46,7 +57,6 @@ const ChatBox = () => {
       let assistantMessage = '';
 
       while (!done) {
-        console.log('!!');
         const { value, done: readerDone } = await reader.read();
         done = readerDone;
 
@@ -59,10 +69,14 @@ const ChatBox = () => {
               prevMessages.pop();
             }
 
-            return [
+            const updatedMessages: Message[] = [
               ...prevMessages,
               { role: 'assistant', content: assistantMessage },
             ];
+
+            localStorage.setItem('messages', JSON.stringify(updatedMessages));
+
+            return updatedMessages;
           });
         }
       }
@@ -111,24 +125,32 @@ const ChatBox = () => {
         {/* 스크롤을 위한 div */}
         <div ref={messagesEndRef} />
       </main>
-      <footer className="flex p-3 border-t flex-shrink-0 min-w-72 lg:border-t-0 lg:border-l">
-        <div className="w-full relative">
+      <aside className="flex gap-2 p-3 border-t flex-shrink-0 min-w-72 lg:border-t-0 lg:border-l lg:flex-col">
+        <div className="w-full relative flex-grow">
           <textarea
             className="border rounded-lg p-2 resize-none w-full h-full focus:border-gray-600 focus:outline-none"
             placeholder="Type your message..."
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            rows={3} // 기본 높이 설정
+            rows={3}
           />
+        </div>
+        <div className="flex flex-col justify-center gap-2">
           <button
-            className="absolute right-3 bottom-3 bg-blue-300 bg-opacity-50 rounded-md px-3 py-2"
+            className="bg-blue-400 text-white rounded-md px-3 py-2"
             onClick={sendMessage}
           >
             Send
           </button>
+          <button
+            className="border border-blue-400 text-blue-400 rounded-md px-3 py-2"
+            onClick={resetMessage}
+          >
+            Reset
+          </button>
         </div>
-      </footer>
+      </aside>
     </div>
   );
 };
