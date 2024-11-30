@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Message } from './types';
 import UserMessage from './UserMessage';
 import AssistantMessage from './AssistantMessage';
@@ -20,8 +20,6 @@ const ChatBox = () => {
   });
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
-  const messagesEndRef = useRef<HTMLDivElement | null>(null); // 메시지 끝을 참조하는 ref
 
   const resetMessage = () => {
     setMessages([]);
@@ -89,13 +87,6 @@ const ChatBox = () => {
     }
   };
 
-  // messages가 변경될 때마다 스크롤을 아래로 내린다.
-  useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [messages]);
-
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(event.target.value);
   };
@@ -128,8 +119,6 @@ const ChatBox = () => {
             <EllipsisLoader />
           </div>
         ) : null}
-        {/* 스크롤을 위한 div */}
-        <div ref={messagesEndRef} />
       </main>
       <aside className="flex gap-2 p-3 border-t flex-shrink-0 min-w-72 lg:border-t-0 lg:border-l lg:flex-col">
         <div className="w-full relative flex-grow">
