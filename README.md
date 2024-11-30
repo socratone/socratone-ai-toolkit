@@ -3,6 +3,8 @@
 OPENAI_API_KEY를 이용한 챗지피티 앱.\
 [chatgpt.com](https://chatgpt.com) 대신 사용하기 위해 작성했습니다.
 
+![스크린샷](docs/screen-shot.png)
+
 다음과 같은 장점이 있습니다.
 
 - 쓴 만큼만 비용을 낼 수 있다.
