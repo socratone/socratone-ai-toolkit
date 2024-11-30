@@ -5,6 +5,7 @@ import { Message } from './types';
 import UserMessage from './UserMessage';
 import AssistantMessage from './AssistantMessage';
 import EllipsisLoader from './EllipsisLoader';
+import classNames from 'classnames';
 
 const systemMessage = {
   role: 'system',
@@ -19,6 +20,7 @@ const ChatBox = () => {
   });
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
   const messagesEndRef = useRef<HTMLDivElement | null>(null); // 메시지 끝을 참조하는 ref
 
   const resetMessage = () => {
@@ -34,7 +36,6 @@ const ChatBox = () => {
     const newMessage: Message = { role: 'user', content: inputValue };
     const updatedMessages = [...messages, newMessage];
     setMessages(updatedMessages);
-    setInputValue('');
 
     localStorage.setItem('messages', JSON.stringify(updatedMessages));
 
@@ -84,17 +85,7 @@ const ChatBox = () => {
       console.error('Error sending message:', error);
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (
-      event.key === 'Enter' &&
-      !event.shiftKey &&
-      !event.nativeEvent.isComposing
-    ) {
-      event.preventDefault(); // 기본 동작 방지 (줄바꿈 방지)
-      sendMessage();
+      setInputValue('');
     }
   };
 
@@ -104,6 +95,21 @@ const ChatBox = () => {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
+
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+
+    if (
+      (isMac ? event.metaKey : event.ctrlKey) && // Command (Mac) 또는 Ctrl (Windows)
+      event.key === 'Enter'
+    ) {
+      sendMessage();
+    }
+  };
 
   return (
     <div className="flex flex-col h-screen lg:flex-row mx-auto max-w-6xl">
@@ -128,23 +134,43 @@ const ChatBox = () => {
       <aside className="flex gap-2 p-3 border-t flex-shrink-0 min-w-72 lg:border-t-0 lg:border-l lg:flex-col">
         <div className="w-full relative flex-grow">
           <textarea
-            className="border rounded-lg p-2 resize-none w-full h-full focus:border-gray-600 focus:outline-none"
+            autoFocus
+            disabled={isLoading}
+            className={classNames(
+              'border rounded-lg p-2 resize-none w-full h-full focus:border-gray-600 focus:outline-none',
+              {
+                'bg-gray-200 cursor-not-allowed border-gray-200 focus:border-gray-200 text-white':
+                  isLoading,
+              }
+            )}
             placeholder="Type your message..."
             value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={handleChange}
             onKeyDown={handleKeyDown}
             rows={3}
           />
         </div>
         <div className="flex flex-col justify-center gap-2">
           <button
-            className="bg-blue-400 text-white rounded-md px-3 py-2"
+            disabled={isLoading}
+            className={classNames(
+              'bg-blue-400 text-white rounded-md px-3 py-2',
+              {
+                'bg-gray-200 cursor-not-allowed': isLoading,
+              }
+            )}
             onClick={sendMessage}
           >
-            Send
+            Send <span className="hidden text-xs lg:inline">(CMD + Enter)</span>
           </button>
           <button
-            className="border border-blue-400 text-blue-400 rounded-md px-3 py-2"
+            disabled={isLoading}
+            className={classNames(
+              'border border-blue-400 text-blue-400 rounded-md px-3 py-2',
+              {
+                'border-gray-200 text-gray-200 cursor-not-allowed': isLoading,
+              }
+            )}
             onClick={resetMessage}
           >
             Reset
