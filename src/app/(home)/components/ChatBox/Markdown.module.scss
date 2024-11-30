@@ -26,4 +26,17 @@ $bg-gray-50: #f9fafb; // Tailwind에서 가져온 색상 값
   li {
     margin-bottom: 0.5em; // 각 리스트 아이템 사이의 간격
   }
+
+  p {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+
+    &:first-child {
+      margin-top: unset;
+    }
+
+    &:last-child {
+      margin-bottom: unset;
+    }
+  }
 }
