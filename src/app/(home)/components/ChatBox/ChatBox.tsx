@@ -18,17 +18,20 @@ const ChatBox = () => {
   const { register, handleSubmit, reset } = useForm<{ userMessage: string }>({
     defaultValues: { userMessage: '' },
   });
-  const [messages, setMessages] = useState<Message[]>(() => {
-    const savedMessages = localStorage.getItem('messages');
-    try {
-      return savedMessages ? JSON.parse(savedMessages) : [];
-    } catch {
-      return [];
-    }
-  });
+  const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // messages 값 불러오기
+  useEffect(() => {
+    const savedMessages = localStorage.getItem('messages');
+    try {
+      setMessages(savedMessages ? JSON.parse(savedMessages) : []);
+    } catch {
+      //
+    }
+  }, []);
 
   useEffect(() => {
     if (!isLoading) {
