@@ -92,9 +92,9 @@ const ChatBox = () => {
   }, [messages]);
 
   return (
-    <div className="flex flex-col h-screen">
-      <main className="flex-grow overflow-y-auto p-4">
-        <div className="flex flex-col gap-3 max-w-[1080px] w-full mx-auto">
+    <div className="flex flex-col h-screen lg:flex-row mx-auto max-w-6xl">
+      <main className="flex-grow overflow-y-auto p-3">
+        <div className="flex flex-col gap-3 w-full">
           {messages.map((msg, index) => {
             if (msg.role === 'user') {
               return <UserMessage key={index} content={msg.content} />;
@@ -102,25 +102,31 @@ const ChatBox = () => {
 
             return <AssistantMessage key={index} content={msg.content} />;
           })}
-          {isLoading ? (
-            <div className="flex justify-center">
-              <EllipsisLoader />
-            </div>
-          ) : null}
-          {/* 스크롤을 위한 div */}
-          <div ref={messagesEndRef} />
         </div>
+        {isLoading ? (
+          <div className="flex justify-center mt-3">
+            <EllipsisLoader />
+          </div>
+        ) : null}
+        {/* 스크롤을 위한 div */}
+        <div ref={messagesEndRef} />
       </main>
-      <footer className="flex p-4 border-t">
-        <div className="max-w-[1080px] w-full mx-auto">
+      <footer className="flex p-3 border-t flex-shrink-0 min-w-72 lg:border-t-0 lg:border-l">
+        <div className="w-full relative">
           <textarea
-            className="border rounded-lg p-2 resize-none w-full focus:border-gray-600 focus:outline-none"
+            className="border rounded-lg p-2 resize-none w-full h-full focus:border-gray-600 focus:outline-none"
             placeholder="Type your message..."
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
             rows={3} // 기본 높이 설정
           />
+          <button
+            className="absolute right-3 bottom-3 bg-blue-300 bg-opacity-50 rounded-md px-3 py-2"
+            onClick={sendMessage}
+          >
+            Send
+          </button>
         </div>
       </footer>
     </div>

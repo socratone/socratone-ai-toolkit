@@ -6,7 +6,7 @@ interface AssistantMessageProps {
 
 const AssistantMessage = ({ content }: AssistantMessageProps) => {
   return (
-    <div className="p-4 rounded-lg border">
+    <div className="p-3 rounded-lg border">
       <Markdown content={content} />
     </div>
   );

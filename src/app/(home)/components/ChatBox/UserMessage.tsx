@@ -4,7 +4,7 @@ interface UserMessageProps {
 
 const UserMessage = ({ content }: UserMessageProps) => {
   return (
-    <p className="p-4 rounded-lg whitespace-pre-wrap bg-blue-50 text-black">
+    <p className="p-3 rounded-lg whitespace-pre-wrap bg-blue-50 text-black ml-auto max-w-lg">
       {content}
     </p>
   );
