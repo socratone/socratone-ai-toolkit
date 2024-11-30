@@ -1,7 +1,8 @@
 # Socratone GPT
 
 OPENAI_API_KEY를 이용한 챗지피티 앱.\
-[chatgpt.com](https://chatgpt.com) 대신 사용하기 위해 작성했습니다.
+[chatgpt.com](https://chatgpt.com) 대신 사용하기 위해 작성했습니다.\
+.env에 키를 넣고 로컬에서 사용합니다.
 
 ![스크린샷](docs/screen-shot.png)
 
