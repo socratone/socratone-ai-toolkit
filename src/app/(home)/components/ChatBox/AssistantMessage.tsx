@@ -1,7 +1,4 @@
-import ReactMarkdown from 'react-markdown';
-import rehypeHighlight from 'rehype-highlight';
-
-import 'highlight.js/styles/github.css'; // 코드 하이라이팅 스타일 (원하는 테마 선택 가능)
+import Markdown from './Markdown';
 
 interface AssistantMessageProps {
   content: string;
@@ -9,13 +6,8 @@ interface AssistantMessageProps {
 
 const AssistantMessage = ({ content }: AssistantMessageProps) => {
   return (
-    <div className="p-2 rounded-lg border">
-      <ReactMarkdown
-        className="whitespace-pre-wrap"
-        rehypePlugins={[rehypeHighlight]} // 코드 하이라이팅 플러그인
-      >
-        {content}
-      </ReactMarkdown>
+    <div className="p-4 rounded-lg border">
+      <Markdown content={content} />
     </div>
   );
 };

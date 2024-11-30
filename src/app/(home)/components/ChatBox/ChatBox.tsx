@@ -59,25 +59,29 @@ const ChatBox = () => {
 
   return (
     <div className="flex flex-col h-screen">
-      <div className="flex-grow overflow-y-auto p-4 flex flex-col gap-3">
-        {messages.map((msg, index) => {
-          if (msg.role === 'user') {
-            return <UserMessage key={index} content={msg.content} />;
-          }
+      <main className="flex-grow overflow-y-auto p-4">
+        <div className="flex flex-col gap-3 max-w-[1080px] w-full mx-auto">
+          {messages.map((msg, index) => {
+            if (msg.role === 'user') {
+              return <UserMessage key={index} content={msg.content} />;
+            }
 
-          return <AssistantMessage key={index} content={msg.content} />;
-        })}
-        {isLoading ? <p>Loading...</p> : null}
-      </div>
+            return <AssistantMessage key={index} content={msg.content} />;
+          })}
+          {isLoading ? <p>Loading...</p> : null}
+        </div>
+      </main>
       <footer className="flex p-4 border-t">
-        <textarea
-          className="flex-grow border rounded-lg p-2 resize-none"
-          placeholder="Type your message..."
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={handleKeyDown}
-          rows={3} // 기본 높이 설정
-        />
+        <div className="max-w-[1080px] w-full mx-auto">
+          <textarea
+            className="border rounded-lg p-2 resize-none w-full focus:border-gray-600 focus:outline-none"
+            placeholder="Type your message..."
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={handleKeyDown}
+            rows={3} // 기본 높이 설정
+          />
+        </div>
       </footer>
     </div>
   );
