@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { Message } from './types';
 import UserMessage from './UserMessage';
 import AssistantMessage from './AssistantMessage';
@@ -14,6 +15,9 @@ const systemMessage = {
 };
 
 const ChatBox = () => {
+  const { register, handleSubmit, reset } = useForm<{ userMessage: string }>({
+    defaultValues: { userMessage: '' },
+  });
   const [messages, setMessages] = useState<Message[]>(() => {
     const savedMessages = localStorage.getItem('messages');
     try {
@@ -22,7 +26,6 @@ const ChatBox = () => {
       return [];
     }
   });
-  const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -38,12 +41,13 @@ const ChatBox = () => {
     localStorage.removeItem('messages');
   };
 
-  const sendMessage = async () => {
-    if (!inputValue.trim()) return;
+  const sendMessage = async (data: { userMessage: string }) => {
+    const userMessage = data.userMessage.trim();
+    if (!userMessage) return;
 
     setIsLoading(true);
 
-    const newMessage: Message = { role: 'user', content: inputValue };
+    const newMessage: Message = { role: 'user', content: userMessage };
     const updatedMessages = [...messages, newMessage];
     setMessages(updatedMessages);
 
@@ -90,16 +94,12 @@ const ChatBox = () => {
         }
       }
 
-      setInputValue('');
+      reset(); // 폼 리셋
     } catch (error) {
       console.error('Error sending message:', error);
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInputValue(event.target.value);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -109,7 +109,7 @@ const ChatBox = () => {
       (isMac ? event.metaKey : event.ctrlKey) && // Command (Mac) 또는 Ctrl (Windows)
       event.key === 'Enter'
     ) {
-      sendMessage();
+      handleSubmit(sendMessage)();
     }
   };
 
@@ -134,8 +134,11 @@ const ChatBox = () => {
       <aside className="flex gap-2 p-3 border-t flex-shrink-0 min-w-72 lg:border-t-0 lg:border-l lg:flex-col">
         <div className="w-full relative flex-grow">
           <textarea
-            ref={textareaRef}
-            autoFocus
+            {...register('userMessage')}
+            ref={(e) => {
+              (textareaRef.current as any) = e; // ref 업데이트
+              register('userMessage').ref(e); // register을 통한 ref 설정
+            }}
             disabled={isLoading}
             className={classNames(
               'border rounded-lg p-2 resize-none w-full h-full focus:border-gray-600 focus:outline-none',
@@ -145,8 +148,6 @@ const ChatBox = () => {
               }
             )}
             placeholder="Type your message..."
-            value={inputValue}
-            onChange={handleChange}
             onKeyDown={handleKeyDown}
             rows={3}
           />
@@ -160,7 +161,7 @@ const ChatBox = () => {
                 'bg-gray-200 cursor-not-allowed': isLoading,
               }
             )}
-            onClick={sendMessage}
+            onClick={handleSubmit(sendMessage)}
           >
             Send <span className="hidden text-xs lg:inline">(CMD + Enter)</span>
           </button>
