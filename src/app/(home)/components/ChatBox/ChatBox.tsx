@@ -9,7 +9,8 @@ import AssistantMessage from './AssistantMessage';
 
 const systemMessage = {
   role: 'system',
-  content: '너는 웹개발에 대해서 잘 알고 있고 한국말로 답변을 해줘야 해.',
+  content:
+    '너는 개발에 대해서 잘 알고 있고 한국말로 답변을 해줘야 해. 모르면 모른다고 해야 해.',
 };
 
 const ChatBox = () => {
