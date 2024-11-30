@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Message } from './types';
 import UserMessage from './UserMessage';
 import AssistantMessage from './AssistantMessage';
@@ -16,10 +16,22 @@ const systemMessage = {
 const ChatBox = () => {
   const [messages, setMessages] = useState<Message[]>(() => {
     const savedMessages = localStorage.getItem('messages');
-    return savedMessages ? JSON.parse(savedMessages) : [];
+    try {
+      return savedMessages ? JSON.parse(savedMessages) : [];
+    } catch {
+      return [];
+    }
   });
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (!isLoading) {
+      textareaRef.current?.focus();
+    }
+  }, [isLoading]);
 
   const resetMessage = () => {
     setMessages([]);
@@ -34,8 +46,6 @@ const ChatBox = () => {
     const newMessage: Message = { role: 'user', content: inputValue };
     const updatedMessages = [...messages, newMessage];
     setMessages(updatedMessages);
-
-    localStorage.setItem('messages', JSON.stringify(updatedMessages));
 
     try {
       const response = await fetch('/api/chat', {
@@ -79,11 +89,12 @@ const ChatBox = () => {
           });
         }
       }
+
+      setInputValue('');
     } catch (error) {
       console.error('Error sending message:', error);
     } finally {
       setIsLoading(false);
-      setInputValue('');
     }
   };
 
@@ -123,6 +134,7 @@ const ChatBox = () => {
       <aside className="flex gap-2 p-3 border-t flex-shrink-0 min-w-72 lg:border-t-0 lg:border-l lg:flex-col">
         <div className="w-full relative flex-grow">
           <textarea
+            ref={textareaRef}
             autoFocus
             disabled={isLoading}
             className={classNames(
