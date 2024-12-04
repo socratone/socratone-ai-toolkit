@@ -7,6 +7,8 @@ import UserMessage from './UserMessage';
 import AssistantMessage from './AssistantMessage';
 import EllipsisLoader from './EllipsisLoader';
 import classNames from 'classnames';
+import Select from '@/components/Select';
+import { OpenAiModel } from '@/types';
 
 const systemMessage = {
   role: 'system',
@@ -14,11 +16,29 @@ const systemMessage = {
     '너는 개발에 대해서 잘 알고 있고 한국말로 답변을 해줘야 해. 모르면 모른다고 해야 해.',
 };
 
+const modelOptions: { value: OpenAiModel; label: string }[] = [
+  {
+    label: 'gpt-4o',
+    value: 'gpt-4o',
+  },
+  {
+    label: 'gpt-4o-mini',
+    value: 'gpt-4o-mini',
+  },
+  {
+    label: 'gpt-4',
+    value: 'gpt-4',
+  },
+];
+
 const ChatBox = () => {
   const { register, handleSubmit, reset } = useForm<{ userMessage: string }>({
     defaultValues: { userMessage: '' },
   });
   const [messages, setMessages] = useState<Message[]>([]);
+  const [selectedModel, setSelectedModel] =
+    useState<OpenAiModel>('gpt-4o-mini');
+
   const [isLoading, setIsLoading] = useState(false);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -30,6 +50,14 @@ const ChatBox = () => {
       setMessages(savedMessages ? JSON.parse(savedMessages) : []);
     } catch {
       console.warn('Invalid saved messages.');
+    }
+  }, []);
+
+  // model 값 불러오기
+  useEffect(() => {
+    const savedModel = localStorage.getItem('model');
+    if (typeof savedModel === 'string') {
+      setSelectedModel(savedModel as OpenAiModel);
     }
   }, []);
 
@@ -60,6 +88,7 @@ const ChatBox = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           messages: [systemMessage, ...updatedMessages],
+          model: selectedModel,
         }),
       });
 
@@ -116,10 +145,20 @@ const ChatBox = () => {
     }
   };
 
+  const handleChangeModel = (selectedModel: OpenAiModel) => {
+    localStorage.setItem('model', selectedModel);
+    setSelectedModel(selectedModel);
+  };
+
   return (
     <div className="flex flex-col h-screen lg:flex-row mx-auto max-w-6xl">
       <main className="flex-grow overflow-y-auto p-3">
         <div className="flex flex-col gap-3 w-full">
+          <Select
+            value={selectedModel}
+            onChange={handleChangeModel}
+            options={modelOptions}
+          />
           {messages.map((msg, index) => {
             if (msg.role === 'user') {
               return <UserMessage key={index} content={msg.content} />;

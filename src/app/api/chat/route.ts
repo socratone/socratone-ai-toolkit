@@ -14,6 +14,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const messages = body.messages;
+    const model = body.model ?? 'gpt-4o-mini';
 
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json(
@@ -22,8 +23,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // https://platform.openai.com/docs/api-reference/chat/create
     const apiRequestBody = {
-      model: 'gpt-4o-mini', // 사용하려는 모델 (gpt-3.5-turbo 또는 gpt-4)
+      model, // 사용하려는 모델
       messages, // ChatGPT 대화 형식에 맞는 메시지 배열
       temperature: 0.7, // 응답 다양성을 조절하는 옵션 (0~1)
       stream: true, // 스트리밍을 활성화합니다.
