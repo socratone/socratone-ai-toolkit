@@ -40,7 +40,7 @@ const Select = <T,>({ value, onChange, options }: SelectProps<T>) => {
       <button
         type="button"
         onClick={toggleDropdown}
-        className="w-full bg-white border border-gray-200 hover:border-black px-4 py-2 rounded-md flex justify-between items-center focus:outline-none"
+        className="w-full bg-white border border-gray-200 hover:border-black px-3 py-2 rounded-md flex justify-between items-center focus:outline-none"
       >
         <span>{selectedOption?.label ?? '없음'}</span>
         <svg
