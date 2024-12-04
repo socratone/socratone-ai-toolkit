@@ -29,7 +29,7 @@ const ChatBox = () => {
     try {
       setMessages(savedMessages ? JSON.parse(savedMessages) : []);
     } catch {
-      //
+      console.warn('Invalid saved messages.');
     }
   }, []);
 
