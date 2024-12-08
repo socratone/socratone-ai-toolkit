@@ -2,10 +2,12 @@ $bg-gray-50: #f9fafb; // Tailwind에서 가져온 색상 값
 
 .markdown {
   white-space: pre-line;
+  line-height: 1.8;
 
   code {
     background-color: $bg-gray-50;
     border-radius: 0.25rem /* 4px */;
+    line-height: 1.5;
 
     // 일반 코드
     padding: 4px;
