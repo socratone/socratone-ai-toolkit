@@ -23,7 +23,7 @@ const Markdown = ({ content }: MarkdownProps) => {
       navigator.clipboard
         .writeText(codeText)
         .then(() => {
-          toast.error('코드가 복사되었습니다.');
+          toast.success('코드가 복사되었습니다.');
         })
         .catch(() => {
           toast.error('코드 복사에 실패했습니다.');
