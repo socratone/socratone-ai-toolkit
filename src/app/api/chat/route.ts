@@ -14,7 +14,11 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const messages = body.messages;
-    const model = body.model ?? 'gpt-4o-mini';
+    const model = body.model;
+
+    if (!model) {
+      return NextResponse.json({ error: 'Invalid model.' }, { status: 400 });
+    }
 
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json(
