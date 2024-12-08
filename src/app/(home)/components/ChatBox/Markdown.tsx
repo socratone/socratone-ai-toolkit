@@ -3,7 +3,7 @@ import rehypeHighlight from 'rehype-highlight';
 import styles from './Markdown.module.scss';
 
 import 'highlight.js/styles/github.css'; // 코드 하이라이팅 스타일 (원하는 테마 선택 가능)
-import CopyIcon from './CopyIcon';
+import CopyButton from './CopyButton';
 
 interface MarkdownProps {
   content: string;
@@ -43,13 +43,7 @@ const Markdown = ({ content }: MarkdownProps) => {
           if (match) {
             return (
               <div>
-                <button
-                  className="ml-auto mb-2 rounded-md border border-gray-300 text-gray-400 text-xs px-2 py-1 flex items-center gap-1 font-bold"
-                  onClick={() => handleCopy(codeId)}
-                >
-                  <CopyIcon />
-                  코드 복사
-                </button>
+                <CopyButton onClick={() => handleCopy(codeId)} />
                 <pre>
                   <code id={codeId} className={className} {...props}>
                     {children}

@@ -1,3 +1,7 @@
+interface CopyButtonProps {
+  onClick: () => void;
+}
+
 const CopyIcon = () => {
   return (
     <svg
@@ -13,4 +17,16 @@ const CopyIcon = () => {
   );
 };
 
-export default CopyIcon;
+const CopyButton = ({ onClick }: CopyButtonProps) => {
+  return (
+    <button
+      className="ml-auto mb-2 rounded-md border border-gray-300 text-gray-400 text-xs px-2 py-1 flex items-center gap-1 font-bold"
+      onClick={onClick}
+    >
+      <CopyIcon />
+      코드 복사
+    </button>
+  );
+};
+
+export default CopyButton;
