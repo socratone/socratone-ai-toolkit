@@ -151,7 +151,7 @@ const ChatBox = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen lg:flex-row mx-auto max-w-6xl">
+    <div className="flex flex-col h-screen lg:flex-row mx-auto max-w-[1920px]">
       <main className="flex-grow overflow-y-auto p-3">
         <div className="flex flex-col gap-3 w-full">
           <Select
@@ -173,7 +173,7 @@ const ChatBox = () => {
           </div>
         ) : null}
       </main>
-      <aside className="flex gap-2 p-3 border-t flex-shrink-0 min-w-72 lg:border-t-0 lg:border-l lg:flex-col">
+      <aside className="flex gap-2 p-3 border-t flex-shrink-0 min-w-96 lg:border-t-0 lg:border-l lg:flex-col">
         <div className="w-full relative flex-grow">
           <textarea
             {...register('userMessage')}
