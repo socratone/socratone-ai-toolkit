@@ -1,6 +1,7 @@
 import ReactMarkdown from 'react-markdown';
 import rehypeHighlight from 'rehype-highlight';
 import styles from './Markdown.module.scss';
+import { toast } from 'react-toastify';
 
 import 'highlight.js/styles/github.css'; // 코드 하이라이팅 스타일 (원하는 테마 선택 가능)
 import CopyButton from './CopyButton';
@@ -22,10 +23,10 @@ const Markdown = ({ content }: MarkdownProps) => {
       navigator.clipboard
         .writeText(codeText)
         .then(() => {
-          alert('코드가 복사되었습니다!');
+          toast.error('코드가 복사되었습니다.');
         })
-        .catch((error) => {
-          console.error('코드 복사 실패:', error);
+        .catch(() => {
+          toast.error('코드 복사에 실패했습니다.');
         });
     }
   };
