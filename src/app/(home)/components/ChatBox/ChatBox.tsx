@@ -11,6 +11,7 @@ import Select from '@/components/Select';
 import { OpenAiModel } from '@/types';
 import ZoomButton from './ZoomButton';
 import MenuIcon from './icons/MenuIcon';
+import Drawer from './Drawer';
 
 const systemMessage = {
   role: 'system',
@@ -37,6 +38,7 @@ const ChatBox = () => {
   const { register, handleSubmit, reset } = useForm<{ userMessage: string }>({
     defaultValues: { userMessage: '' },
   });
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [fontSize, setFontSize] = useState<FontSize>('text-base');
   const [messages, setMessages] = useState<Message[]>([]);
   const [selectedModel, setSelectedModel] =
@@ -167,95 +169,112 @@ const ChatBox = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen lg:flex-row mx-auto max-w-[1920px]">
-      <main className="flex-grow overflow-y-auto p-3">
-        <button className="fixed flex justify-center items-center top-3 left-3 z-10 size-10">
-          <MenuIcon />
-        </button>
-        <div className="flex flex-col gap-3 w-full">
-          <div className="flex justify-end items-center gap-1">
-            <ZoomButton value={fontSize} onChange={handleChangeFontSize} />
-            <Select
-              value={selectedModel}
-              onChange={handleChangeModel}
-              options={modelOptions}
-            />
-          </div>
-          {messages.map((msg, index) => {
-            if (msg.role === 'user') {
+    <>
+      <div className="flex flex-col h-screen lg:flex-row mx-auto max-w-[1920px]">
+        <main className="flex-grow overflow-y-auto p-3">
+          <button
+            className="fixed flex justify-center items-center top-3 left-3 z-10 size-10"
+            onClick={() => setDrawerOpen(true)}
+          >
+            <MenuIcon />
+          </button>
+          <div className="flex flex-col gap-3 w-full">
+            <div className="flex justify-end items-center gap-1">
+              <ZoomButton value={fontSize} onChange={handleChangeFontSize} />
+              <Select
+                value={selectedModel}
+                onChange={handleChangeModel}
+                options={modelOptions}
+              />
+            </div>
+            {messages.map((msg, index) => {
+              if (msg.role === 'user') {
+                return (
+                  <UserMessage
+                    key={index}
+                    className={fontSize}
+                    content={msg.content}
+                  />
+                );
+              }
+
               return (
-                <UserMessage
+                <AssistantMessage
                   key={index}
                   className={fontSize}
                   content={msg.content}
                 />
               );
-            }
-
-            return (
-              <AssistantMessage
-                key={index}
-                className={fontSize}
-                content={msg.content}
-              />
-            );
-          })}
-        </div>
-        {isLoading ? (
-          <div className="flex justify-center mt-3">
-            <EllipsisLoader />
+            })}
           </div>
-        ) : null}
-      </main>
-      <aside className="flex gap-2 p-3 border-t flex-shrink-0 min-w-96 lg:border-t-0 lg:border-l lg:flex-col">
-        <div className="w-full relative flex-grow">
-          <textarea
-            {...register('userMessage')}
-            ref={(e) => {
-              (textareaRef.current as any) = e; // ref 업데이트
-              register('userMessage').ref(e); // register을 통한 ref 설정
-            }}
-            disabled={isLoading}
-            className={classNames(
-              'border rounded-lg p-2 resize-none w-full h-full focus:border-gray-600 focus:outline-none',
-              {
-                'bg-gray-200 cursor-not-allowed border-gray-200 focus:border-gray-200 text-white':
-                  isLoading,
-              }
-            )}
-            placeholder="Type your message..."
-            onKeyDown={handleKeyDown}
-            rows={3}
-          />
-        </div>
-        <div className="flex flex-col justify-center gap-2">
+          {isLoading ? (
+            <div className="flex justify-center mt-3">
+              <EllipsisLoader />
+            </div>
+          ) : null}
+        </main>
+        <aside className="flex gap-2 p-3 border-t flex-shrink-0 min-w-96 lg:border-t-0 lg:border-l lg:flex-col">
+          <div className="w-full relative flex-grow">
+            <textarea
+              {...register('userMessage')}
+              ref={(e) => {
+                (textareaRef.current as any) = e; // ref 업데이트
+                register('userMessage').ref(e); // register을 통한 ref 설정
+              }}
+              disabled={isLoading}
+              className={classNames(
+                'border rounded-lg p-2 resize-none w-full h-full focus:border-gray-600 focus:outline-none',
+                {
+                  'bg-gray-200 cursor-not-allowed border-gray-200 focus:border-gray-200 text-white':
+                    isLoading,
+                }
+              )}
+              placeholder="Type your message..."
+              onKeyDown={handleKeyDown}
+              rows={3}
+            />
+          </div>
+          <div className="flex flex-col justify-center gap-2">
+            <button
+              disabled={isLoading}
+              className={classNames(
+                'bg-blue-400 text-white rounded-md px-3 py-2',
+                {
+                  'bg-gray-200 cursor-not-allowed': isLoading,
+                }
+              )}
+              onClick={handleSubmit(sendMessage)}
+            >
+              Send{' '}
+              <span className="hidden text-xs lg:inline">(CMD + Enter)</span>
+            </button>
+            <button
+              disabled={isLoading}
+              className={classNames(
+                'border border-blue-400 text-blue-400 rounded-md px-3 py-2',
+                {
+                  'border-gray-200 text-gray-200 cursor-not-allowed': isLoading,
+                }
+              )}
+              onClick={resetMessage}
+            >
+              Reset
+            </button>
+          </div>
+        </aside>
+      </div>
+
+      <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+        <div className="p-3">
           <button
-            disabled={isLoading}
-            className={classNames(
-              'bg-blue-400 text-white rounded-md px-3 py-2',
-              {
-                'bg-gray-200 cursor-not-allowed': isLoading,
-              }
-            )}
-            onClick={handleSubmit(sendMessage)}
+            className="flex justify-center items-center size-10"
+            onClick={() => setDrawerOpen(false)}
           >
-            Send <span className="hidden text-xs lg:inline">(CMD + Enter)</span>
-          </button>
-          <button
-            disabled={isLoading}
-            className={classNames(
-              'border border-blue-400 text-blue-400 rounded-md px-3 py-2',
-              {
-                'border-gray-200 text-gray-200 cursor-not-allowed': isLoading,
-              }
-            )}
-            onClick={resetMessage}
-          >
-            Reset
+            <MenuIcon />
           </button>
         </div>
-      </aside>
-    </div>
+      </Drawer>
+    </>
   );
 };
 
