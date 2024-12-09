@@ -12,6 +12,7 @@ import { OpenAiModel } from '@/types';
 import ZoomButton from './ZoomButton';
 import MenuIcon from './icons/MenuIcon';
 import Drawer from './Drawer';
+import Link from 'next/link';
 
 const systemMessage = {
   role: 'system',
@@ -275,6 +276,12 @@ const ChatBox = () => {
           >
             <MenuIcon />
           </button>
+          <Link
+            className="min-h-8 px-2 flex items-center"
+            href="https://platform.openai.com/settings/organization/usage"
+          >
+            사용량 확인
+          </Link>
         </div>
       </Drawer>
     </>
