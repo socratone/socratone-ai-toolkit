@@ -8,8 +8,11 @@ interface UserMessageProps {
 const UserMessage = ({ content, className }: UserMessageProps) => {
   return (
     <p
+      style={{
+        wordBreak: 'break-all',
+      }}
       className={classNames(
-        'p-3 rounded-lg whitespace-pre-wrap bg-blue-50 text-black ml-auto max-w-lg',
+        'p-3 rounded-lg whitespace-pre-wrap bg-blue-50 text-black ml-auto max-w-lg white',
         className
       )}
     >

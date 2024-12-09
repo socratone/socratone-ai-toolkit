@@ -17,5 +17,5 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: 'Pretendard', Arial, Helvetica, sans-serif;
+  font-family: 'Pretendard', sans-serif;
 }
