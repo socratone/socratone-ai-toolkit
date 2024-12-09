@@ -1,3 +1,5 @@
+import MinusIcon from './icons/MinusIcon';
+import PlusIcon from './icons/PlusIcon';
 import { FontSize } from './types';
 
 interface ZoomButtonProps {
@@ -42,18 +44,18 @@ const ZoomButton = ({ value, onChange }: ZoomButtonProps) => {
   return (
     <div className="flex gap-1">
       <button
-        className="size-8 text-xl border border-gray-200 rounded-md"
+        className="size-8 flex justify-center items-center border border-gray-200 rounded-md text-gray-400"
         disabled={minusDisabled}
         onClick={handleMinus}
       >
-        -
+        <MinusIcon />
       </button>
       <button
-        className="size-8 text-xl border border-gray-200 rounded-md"
+        className="size-8 flex justify-center items-center border border-gray-200 rounded-md text-gray-400"
         disabled={plusDisabled}
         onClick={handlePlus}
       >
-        +
+        <PlusIcon />
       </button>
     </div>
   );

@@ -10,6 +10,7 @@ import classNames from 'classnames';
 import Select from '@/components/Select';
 import { OpenAiModel } from '@/types';
 import ZoomButton from './ZoomButton';
+import MenuIcon from './icons/MenuIcon';
 
 const systemMessage = {
   role: 'system',
@@ -168,14 +169,17 @@ const ChatBox = () => {
   return (
     <div className="flex flex-col h-screen lg:flex-row mx-auto max-w-[1920px]">
       <main className="flex-grow overflow-y-auto p-3">
+        <button className="fixed flex justify-center items-center top-3 left-3 z-10 size-10">
+          <MenuIcon />
+        </button>
         <div className="flex flex-col gap-3 w-full">
-          <div className="flex justify-between items-center gap-1">
+          <div className="flex justify-end items-center gap-1">
+            <ZoomButton value={fontSize} onChange={handleChangeFontSize} />
             <Select
               value={selectedModel}
               onChange={handleChangeModel}
               options={modelOptions}
             />
-            <ZoomButton value={fontSize} onChange={handleChangeFontSize} />
           </div>
           {messages.map((msg, index) => {
             if (msg.role === 'user') {
