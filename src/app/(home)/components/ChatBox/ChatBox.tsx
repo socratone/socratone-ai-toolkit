@@ -2,13 +2,14 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Message } from './types';
+import { FontSize, Message } from './types';
 import UserMessage from './UserMessage';
 import AssistantMessage from './AssistantMessage';
 import EllipsisLoader from './EllipsisLoader';
 import classNames from 'classnames';
 import Select from '@/components/Select';
 import { OpenAiModel } from '@/types';
+import ZoomButton from './ZoomButton';
 
 const systemMessage = {
   role: 'system',
@@ -35,6 +36,7 @@ const ChatBox = () => {
   const { register, handleSubmit, reset } = useForm<{ userMessage: string }>({
     defaultValues: { userMessage: '' },
   });
+  const [fontSize, setFontSize] = useState<FontSize>('text-base');
   const [messages, setMessages] = useState<Message[]>([]);
   const [selectedModel, setSelectedModel] =
     useState<OpenAiModel>('gpt-4o-mini');
@@ -58,6 +60,14 @@ const ChatBox = () => {
     const savedModel = localStorage.getItem('model');
     if (typeof savedModel === 'string') {
       setSelectedModel(savedModel as OpenAiModel);
+    }
+  }, []);
+
+  // fontSize 값 불러오기
+  useEffect(() => {
+    const savedFontSize = localStorage.getItem('fontSize');
+    if (typeof savedFontSize === 'string') {
+      setFontSize(savedFontSize as FontSize);
     }
   }, []);
 
@@ -150,21 +160,41 @@ const ChatBox = () => {
     setSelectedModel(selectedModel);
   };
 
+  const handleChangeFontSize = (fontSize: FontSize) => {
+    localStorage.setItem('fontSize', fontSize);
+    setFontSize(fontSize);
+  };
+
   return (
     <div className="flex flex-col h-screen lg:flex-row mx-auto max-w-[1920px]">
       <main className="flex-grow overflow-y-auto p-3">
         <div className="flex flex-col gap-3 w-full">
-          <Select
-            value={selectedModel}
-            onChange={handleChangeModel}
-            options={modelOptions}
-          />
+          <div className="flex justify-between items-center gap-1">
+            <Select
+              value={selectedModel}
+              onChange={handleChangeModel}
+              options={modelOptions}
+            />
+            <ZoomButton value={fontSize} onChange={handleChangeFontSize} />
+          </div>
           {messages.map((msg, index) => {
             if (msg.role === 'user') {
-              return <UserMessage key={index} content={msg.content} />;
+              return (
+                <UserMessage
+                  key={index}
+                  className={fontSize}
+                  content={msg.content}
+                />
+              );
             }
 
-            return <AssistantMessage key={index} content={msg.content} />;
+            return (
+              <AssistantMessage
+                key={index}
+                className={fontSize}
+                content={msg.content}
+              />
+            );
           })}
         </div>
         {isLoading ? (

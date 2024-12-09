@@ -1,12 +1,14 @@
+import classNames from 'classnames';
 import Markdown from './Markdown';
 
 interface AssistantMessageProps {
   content: string;
+  className?: string;
 }
 
-const AssistantMessage = ({ content }: AssistantMessageProps) => {
+const AssistantMessage = ({ content, className }: AssistantMessageProps) => {
   return (
-    <div className="p-3 rounded-lg border">
+    <div className={classNames('p-3 rounded-lg border', className)}>
       <Markdown content={content} />
     </div>
   );
