@@ -15,7 +15,9 @@ OPENAI_API_KEY를 이용한 챗지피티 앱.\
 
 - history가 남지 않는다.
 
-## Env
+## 실행 방법
+
+### Env
 
 아래 링크에서 발급한 키를 `.env`에 넣어야 합니다.
 
@@ -24,6 +26,24 @@ https://platform.openai.com/settings/organization/api-keys
 ```
 OPENAI_API_KEY=???
 ```
+
+### Scripts
+
+**1\. 빌드**
+
+```
+pnpm build
+```
+
+**2\. 실행**
+
+```
+pnpm start
+```
+
+**3\. 링크**
+
+http://localhost:4000
 
 ## 사용량 확인
 
