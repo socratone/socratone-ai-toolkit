@@ -22,7 +22,7 @@ const AssistantMessage = ({ content, className }: AssistantMessageProps) => {
           />
         </div>
       </div>
-      <div className="p-3 rounded-lg border">
+      <div className="p-3 rounded-lg border overflow-x-auto">
         <Markdown content={content} />
       </div>
     </div>
