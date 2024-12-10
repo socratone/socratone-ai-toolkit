@@ -12,7 +12,7 @@ const UserMessage = ({ content, className }: UserMessageProps) => {
         wordBreak: 'break-all',
       }}
       className={classNames(
-        'p-3 rounded-lg whitespace-pre-wrap bg-blue-50 text-black ml-auto max-w-lg white',
+        'p-3 rounded-lg whitespace-pre-wrap bg-blue-50 text-black ml-32 white',
         className
       )}
     >
