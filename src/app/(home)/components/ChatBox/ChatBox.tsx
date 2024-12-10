@@ -14,6 +14,8 @@ import MenuIcon from './icons/MenuIcon';
 import Drawer from './Drawer';
 import Link from 'next/link';
 import CloseIcon from './icons/CloseIcon';
+import ScrollButton from './ScrollButton';
+import { debounce } from 'es-toolkit';
 
 const systemMessage = {
   role: 'system',
@@ -44,6 +46,9 @@ const ChatBox = () => {
   const { register, handleSubmit, reset } = useForm<{ userMessage: string }>({
     defaultValues: { userMessage: '' },
   });
+  const [scrollButtonDirection, setScrollButtonDirection] = useState<
+    'down' | 'up'
+  >('down');
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [fontSize, setFontSize] = useState<FontSize>('text-base');
   const [messages, setMessages] = useState<Message[]>([]);
@@ -52,6 +57,7 @@ const ChatBox = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const mainRef = useRef<HTMLElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // messages 값 불러오기
@@ -85,6 +91,27 @@ const ChatBox = () => {
       textareaRef.current?.focus();
     }
   }, [isLoading]);
+
+  // 스크롤에 따라 버튼 방향 조절
+  useEffect(() => {
+    const handleScroll = debounce(() => {
+      if (!mainRef.current) return;
+
+      const { scrollTop, scrollHeight, clientHeight } = mainRef.current;
+      if (scrollTop > (scrollHeight - clientHeight) / 2) {
+        setScrollButtonDirection('up');
+      } else {
+        setScrollButtonDirection('down');
+      }
+    }, 200);
+
+    const mainElement = mainRef.current;
+    mainElement?.addEventListener('scroll', handleScroll);
+
+    return () => {
+      mainElement?.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const resetMessage = () => {
     setMessages([]);
@@ -174,10 +201,26 @@ const ChatBox = () => {
     setFontSize(fontSize);
   };
 
+  const handleClickScrollButton = () => {
+    if (!mainRef.current) return;
+
+    if (scrollButtonDirection === 'up') {
+      mainRef.current.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    } else {
+      mainRef.current.scrollTo({
+        top: 1_000_000_000,
+        behavior: 'smooth',
+      });
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col h-screen lg:flex-row mx-auto max-w-[1920px]">
-        <main className="flex-grow overflow-y-auto p-3">
+        <main ref={mainRef} className="flex-grow overflow-y-auto p-3">
           <button
             className="fixed flex justify-center items-center top-3 left-3 z-10 size-10"
             onClick={() => setDrawerOpen(true)}
@@ -219,7 +262,12 @@ const ChatBox = () => {
             </div>
           ) : null}
         </main>
-        <aside className="flex gap-2 p-3 border-t flex-shrink-0 lg:border-t-0 lg:border-l lg:flex-col lg:w-96">
+        <aside className="relative flex gap-2 p-3 border-t flex-shrink-0 lg:border-t-0 lg:border-l lg:flex-col lg:w-96">
+          <ScrollButton
+            direction={scrollButtonDirection}
+            onClick={handleClickScrollButton}
+            className="hidden absolute bottom-3 right-full mr-3 lg:flex"
+          />
           <div className="w-full relative flex-grow">
             <textarea
               {...register('userMessage')}
