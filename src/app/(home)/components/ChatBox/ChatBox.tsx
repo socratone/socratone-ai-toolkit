@@ -217,7 +217,7 @@ const ChatBox = () => {
             </div>
           ) : null}
         </main>
-        <aside className="flex gap-2 p-3 border-t flex-shrink-0 min-w-96 lg:border-t-0 lg:border-l lg:flex-col">
+        <aside className="flex gap-2 p-3 border-t flex-shrink-0 lg:border-t-0 lg:border-l lg:flex-col lg:w-96">
           <div className="w-full relative flex-grow">
             <textarea
               {...register('userMessage')}
