@@ -231,7 +231,8 @@ const ChatBox = () => {
                 {
                   'bg-gray-200 cursor-not-allowed border-gray-200 focus:border-gray-200 text-white':
                     isLoading,
-                }
+                },
+                fontSize
               )}
               placeholder="Type your message..."
               onKeyDown={handleKeyDown}
