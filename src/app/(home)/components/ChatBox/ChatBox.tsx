@@ -17,6 +17,7 @@ import CloseIcon from './icons/CloseIcon';
 import ScrollButton from './ScrollButton';
 import { debounce } from 'es-toolkit';
 import { modelOptions, systemMessage } from './constants';
+import AnimatedButton from './AnimatedButton';
 
 const ChatBox = () => {
   const { register, handleSubmit, reset } = useForm<{ userMessage: string }>({
@@ -266,19 +267,13 @@ const ChatBox = () => {
             />
           </div>
           <div className="flex flex-col justify-center gap-2">
-            <button
+            <AnimatedButton
               disabled={isLoading}
-              className={classNames(
-                'bg-blue-400 text-white rounded-md px-3 py-2',
-                {
-                  'bg-gray-200 cursor-not-allowed': isLoading,
-                }
-              )}
               onClick={handleSubmit(sendMessage)}
             >
               Send{' '}
               <span className="hidden text-xs lg:inline">(CMD + Enter)</span>
-            </button>
+            </AnimatedButton>
             <button
               disabled={isLoading}
               className={classNames(

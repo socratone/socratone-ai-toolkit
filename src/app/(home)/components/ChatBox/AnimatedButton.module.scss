@@ -1,0 +1,33 @@
+.button {
+  position: relative;
+  color: white;
+  overflow: hidden;
+  transition: transform 0.3s;
+}
+
+.background {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: linear-gradient(45deg, #ffffff, #3b82f6);
+  transform: translate(-50%, -50%) rotate(0deg);
+  animation: rotateBackground 8s linear infinite;
+}
+
+.text {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes rotateBackground {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.button:active {
+  transform: scale(0.98);
+}
