@@ -13,6 +13,7 @@ import ZoomButton from './ZoomButton';
 import MenuIcon from './icons/MenuIcon';
 import Drawer from './Drawer';
 import Link from 'next/link';
+import CloseIcon from './icons/CloseIcon';
 
 const systemMessage = {
   role: 'system',
@@ -276,7 +277,7 @@ const ChatBox = () => {
             className="flex justify-center items-center size-10 mb-2"
             onClick={() => setDrawerOpen(false)}
           >
-            <MenuIcon />
+            <CloseIcon />
           </button>
           <Link
             className="min-h-8 px-2 flex items-center text-lg font-medium"
