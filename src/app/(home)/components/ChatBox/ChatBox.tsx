@@ -272,13 +272,13 @@ const ChatBox = () => {
       <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)}>
         <div className="p-3">
           <button
-            className="flex justify-center items-center size-10"
+            className="flex justify-center items-center size-10 mb-2"
             onClick={() => setDrawerOpen(false)}
           >
             <MenuIcon />
           </button>
           <Link
-            className="min-h-8 px-2 flex items-center"
+            className="min-h-8 px-2 flex items-center text-lg font-medium"
             href="https://platform.openai.com/settings/organization/usage"
           >
             사용량 확인
