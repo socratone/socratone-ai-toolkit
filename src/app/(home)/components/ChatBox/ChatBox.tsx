@@ -2,13 +2,13 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { FontSize, Message, MessagesByDateTime } from './types';
+import { FontSize } from './types';
 import UserMessage from './UserMessage';
 import AssistantMessage from './AssistantMessage';
 import EllipsisLoader from './EllipsisLoader';
 import classNames from 'classnames';
 import Select from '@/components/Select';
-import { OpenAiModel } from '@/types';
+import { Message, MessagesByDateTime, OpenAiModel } from '@/types';
 import ZoomButton from './ZoomButton';
 import MenuIcon from './icons/MenuIcon';
 import ScrollButton from './ScrollButton';
@@ -20,16 +20,14 @@ import {
   MESSAGES_STORAGE_KEY,
   MODEL_STORAGE_KEY,
 } from '@/constants';
-import { getLatestKey, getNowKey } from './utils/key';
+import useCurrentMessageKey from '../../hooks/useCurrentMessageKey';
 
 interface ChatBoxProps {
   onOpenMenu: () => void;
 }
 
 const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
-  const [currentMessageKey, setCurrentMessageKey] = useState<string>(
-    getNowKey()
-  );
+  const { currentMessageKey } = useCurrentMessageKey();
 
   const { register, handleSubmit, reset } = useForm<{ userMessage: string }>({
     defaultValues: { userMessage: '' },
@@ -47,27 +45,37 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
   const mainRef = useRef<HTMLElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // 초기 currentMessageKey 설정
+  // 키에 해당하는 messages 초기화
   useEffect(() => {
-    const messagesByDateTimeString = localStorage.getItem(MESSAGES_STORAGE_KEY);
-    try {
-      // 저장된 값이 있는 경우
-      if (messagesByDateTimeString) {
-        const messagesByDateTime: MessagesByDateTime = JSON.parse(
-          messagesByDateTimeString
-        );
+    if (currentMessageKey) {
+      (() => {
+        const messagesByDateTimeString =
+          localStorage.getItem(MESSAGES_STORAGE_KEY);
 
-        // 최근 키를 currentMessageKey로 설정
-        const latestKey = getLatestKey(messagesByDateTime);
-        setCurrentMessageKey(latestKey);
+        // 저장된 값이 없는 경우
+        if (!messagesByDateTimeString) {
+          setMessages([]);
+          return;
+        }
 
-        // 키에 해당하는 messages 로딩
-        setMessages(messagesByDateTime[latestKey]);
-      }
-    } catch {
-      console.warn('Invalid saved messages.');
+        try {
+          const messagesByDateTime: MessagesByDateTime = JSON.parse(
+            messagesByDateTimeString
+          );
+
+          // 저장된 키에 해당하는 messages가 있는 경우
+          if (messagesByDateTime[currentMessageKey]) {
+            setMessages(messagesByDateTime[currentMessageKey]);
+          } else {
+            // 없는 경우
+            setMessages([]);
+          }
+        } catch {
+          console.warn('Invalid saved messages.');
+        }
+      })();
     }
-  }, []);
+  }, [currentMessageKey]);
 
   // model 값 불러오기
   useEffect(() => {
@@ -113,6 +121,8 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
   }, []);
 
   const saveMessagesToLocalStorage = (messages: Message[]) => {
+    if (!currentMessageKey) return;
+
     const messagesByDateTimeString = localStorage.getItem(MESSAGES_STORAGE_KEY);
 
     // 처음 저장하는 경우

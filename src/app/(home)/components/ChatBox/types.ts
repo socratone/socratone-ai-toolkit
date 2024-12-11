@@ -1,10 +1,3 @@
-export type Message = {
-  role: 'system' | 'user' | 'assistant';
-  content: string;
-};
-
-export type MessagesByDateTime = Record<string, Message[]>;
-
 export type FontSize =
   | 'text-xs'
   | 'text-sm'
