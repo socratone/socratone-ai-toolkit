@@ -11,9 +11,6 @@ import Select from '@/components/Select';
 import { OpenAiModel } from '@/types';
 import ZoomButton from './ZoomButton';
 import MenuIcon from './icons/MenuIcon';
-import Drawer from './Drawer';
-import Link from 'next/link';
-import CloseIcon from './icons/CloseIcon';
 import ScrollButton from './ScrollButton';
 import { debounce } from 'es-toolkit';
 import { modelOptions, systemMessage } from './constants';
@@ -25,7 +22,11 @@ import {
 } from '@/constants';
 import { getLatestKey, getNowKey } from './utils/key';
 
-const ChatBox = () => {
+interface ChatBoxProps {
+  onOpenMenu: () => void;
+}
+
+const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
   const [currentMessageKey, setCurrentMessageKey] = useState<string>(
     getNowKey()
   );
@@ -36,7 +37,6 @@ const ChatBox = () => {
   const [scrollButtonDirection, setScrollButtonDirection] = useState<
     'down' | 'up'
   >('down');
-  const [drawerOpen, setDrawerOpen] = useState(false);
   const [fontSize, setFontSize] = useState<FontSize>('text-base');
   const [messages, setMessages] = useState<Message[]>([]);
   const [selectedModel, setSelectedModel] =
@@ -238,106 +238,86 @@ const ChatBox = () => {
   };
 
   return (
-    <>
-      <div className="flex flex-col h-screen lg:flex-row mx-auto max-w-[1920px]">
-        <main ref={mainRef} className="flex-grow overflow-y-auto p-3">
-          <button
-            className="fixed flex justify-center items-center top-3 left-3 z-10 size-10"
-            onClick={() => setDrawerOpen(true)}
-          >
-            <MenuIcon />
-          </button>
-          <div className="flex flex-col gap-3 w-full">
-            <div className="flex justify-end items-center gap-1">
-              <ZoomButton value={fontSize} onChange={handleChangeFontSize} />
-              <Select
-                value={selectedModel}
-                onChange={handleChangeModel}
-                options={modelOptions}
-              />
-            </div>
-            {messages.map((msg, index) => {
-              if (msg.role === 'user') {
-                return (
-                  <UserMessage
-                    key={index}
-                    className={fontSize}
-                    content={msg.content}
-                  />
-                );
-              }
-
+    <div className="flex flex-col h-screen lg:flex-row mx-auto max-w-[1920px]">
+      <main ref={mainRef} className="flex-grow overflow-y-auto p-3">
+        <button
+          className="fixed flex justify-center items-center top-3 left-3 z-10 size-10"
+          onClick={onOpenMenu}
+        >
+          <MenuIcon />
+        </button>
+        <div className="flex flex-col gap-3 w-full">
+          <div className="flex justify-end items-center gap-1">
+            <ZoomButton value={fontSize} onChange={handleChangeFontSize} />
+            <Select
+              value={selectedModel}
+              onChange={handleChangeModel}
+              options={modelOptions}
+            />
+          </div>
+          {messages.map((msg, index) => {
+            if (msg.role === 'user') {
               return (
-                <AssistantMessage
+                <UserMessage
                   key={index}
                   className={fontSize}
                   content={msg.content}
                 />
               );
-            })}
-          </div>
-          {isLoading ? (
-            <div className="flex justify-center mt-3">
-              <EllipsisLoader />
-            </div>
-          ) : null}
-        </main>
-        <aside className="relative flex gap-2 p-3 border-t flex-shrink-0 lg:border-t-0 lg:border-l lg:flex-col lg:w-96">
-          <ScrollButton
-            direction={scrollButtonDirection}
-            onClick={handleClickScrollButton}
-            className="hidden absolute bottom-3 right-full mr-3 lg:flex"
-          />
-          <div className="w-full relative flex-grow">
-            <textarea
-              {...register('userMessage')}
-              ref={(e) => {
-                (textareaRef.current as any) = e; // ref 업데이트
-                register('userMessage').ref(e); // register을 통한 ref 설정
-              }}
-              disabled={isLoading}
-              className={classNames(
-                'border rounded-lg p-2 resize-none w-full h-full focus:border-gray-600 focus:outline-none',
-                {
-                  'bg-gray-200 cursor-not-allowed border-gray-200 focus:border-gray-200 text-white':
-                    isLoading,
-                },
-                fontSize
-              )}
-              placeholder="Type your message..."
-              onKeyDown={handleKeyDown}
-              rows={3}
-            />
-          </div>
-          <div className="flex flex-col justify-center gap-2">
-            <AnimatedButton
-              disabled={isLoading}
-              onClick={handleSubmit(sendMessage)}
-            >
-              Send{' '}
-              <span className="hidden text-xs lg:inline">(CMD + Enter)</span>
-            </AnimatedButton>
-          </div>
-        </aside>
-      </div>
+            }
 
-      <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)}>
-        <div className="p-3">
-          <button
-            className="flex justify-center items-center size-10 mb-2"
-            onClick={() => setDrawerOpen(false)}
-          >
-            <CloseIcon />
-          </button>
-          <Link
-            className="min-h-8 px-2 flex items-center text-lg font-medium"
-            href="https://platform.openai.com/settings/organization/usage"
-          >
-            사용량 확인
-          </Link>
+            return (
+              <AssistantMessage
+                key={index}
+                className={fontSize}
+                content={msg.content}
+              />
+            );
+          })}
         </div>
-      </Drawer>
-    </>
+        {isLoading ? (
+          <div className="flex justify-center mt-3">
+            <EllipsisLoader />
+          </div>
+        ) : null}
+      </main>
+      <aside className="relative flex gap-2 p-3 border-t flex-shrink-0 lg:border-t-0 lg:border-l lg:flex-col lg:w-96">
+        <ScrollButton
+          direction={scrollButtonDirection}
+          onClick={handleClickScrollButton}
+          className="hidden absolute bottom-3 right-full mr-3 lg:flex"
+        />
+        <div className="w-full relative flex-grow">
+          <textarea
+            {...register('userMessage')}
+            ref={(e) => {
+              (textareaRef.current as any) = e; // ref 업데이트
+              register('userMessage').ref(e); // register을 통한 ref 설정
+            }}
+            disabled={isLoading}
+            className={classNames(
+              'border rounded-lg p-2 resize-none w-full h-full focus:border-gray-600 focus:outline-none',
+              {
+                'bg-gray-200 cursor-not-allowed border-gray-200 focus:border-gray-200 text-white':
+                  isLoading,
+              },
+              fontSize
+            )}
+            placeholder="Type your message..."
+            onKeyDown={handleKeyDown}
+            rows={3}
+          />
+        </div>
+        <div className="flex flex-col justify-center gap-2">
+          <AnimatedButton
+            disabled={isLoading}
+            onClick={handleSubmit(sendMessage)}
+          >
+            Send <span className="hidden text-xs lg:inline">(CMD + Enter)</span>
+          </AnimatedButton>
+        </div>
+      </aside>
+    </div>
   );
 };
 
