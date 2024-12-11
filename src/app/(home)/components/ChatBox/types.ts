@@ -3,6 +3,8 @@ export type Message = {
   content: string;
 };
 
+export type MessagesByDateTime = Record<string, Message[]>;
+
 export type FontSize =
   | 'text-xs'
   | 'text-sm'

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { FontSize, Message } from './types';
+import { FontSize, Message, MessagesByDateTime } from './types';
 import UserMessage from './UserMessage';
 import AssistantMessage from './AssistantMessage';
 import EllipsisLoader from './EllipsisLoader';
@@ -18,8 +18,18 @@ import ScrollButton from './ScrollButton';
 import { debounce } from 'es-toolkit';
 import { modelOptions, systemMessage } from './constants';
 import AnimatedButton from './AnimatedButton';
+import {
+  FONT_SIZE_STORAGE_KEY,
+  MESSAGES_STORAGE_KEY,
+  MODEL_STORAGE_KEY,
+} from '@/constants';
+import { getLatestKey, getNowKey } from './utils/key';
 
 const ChatBox = () => {
+  const [currentMessageKey, setCurrentMessageKey] = useState<string>(
+    getNowKey()
+  );
+
   const { register, handleSubmit, reset } = useForm<{ userMessage: string }>({
     defaultValues: { userMessage: '' },
   });
@@ -37,11 +47,23 @@ const ChatBox = () => {
   const mainRef = useRef<HTMLElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // messages 값 불러오기
+  // 초기 currentMessageKey 설정
   useEffect(() => {
-    const savedMessages = localStorage.getItem('messages');
+    const messagesByDateTimeString = localStorage.getItem(MESSAGES_STORAGE_KEY);
     try {
-      setMessages(savedMessages ? JSON.parse(savedMessages) : []);
+      // 저장된 값이 있는 경우
+      if (messagesByDateTimeString) {
+        const messagesByDateTime: MessagesByDateTime = JSON.parse(
+          messagesByDateTimeString
+        );
+
+        // 최근 키를 currentMessageKey로 설정
+        const latestKey = getLatestKey(messagesByDateTime);
+        setCurrentMessageKey(latestKey);
+
+        // 키에 해당하는 messages 로딩
+        setMessages(messagesByDateTime[latestKey]);
+      }
     } catch {
       console.warn('Invalid saved messages.');
     }
@@ -49,7 +71,7 @@ const ChatBox = () => {
 
   // model 값 불러오기
   useEffect(() => {
-    const savedModel = localStorage.getItem('model');
+    const savedModel = localStorage.getItem(MODEL_STORAGE_KEY);
     if (typeof savedModel === 'string') {
       setSelectedModel(savedModel as OpenAiModel);
     }
@@ -57,7 +79,7 @@ const ChatBox = () => {
 
   // fontSize 값 불러오기
   useEffect(() => {
-    const savedFontSize = localStorage.getItem('fontSize');
+    const savedFontSize = localStorage.getItem(FONT_SIZE_STORAGE_KEY);
     if (typeof savedFontSize === 'string') {
       setFontSize(savedFontSize as FontSize);
     }
@@ -90,9 +112,30 @@ const ChatBox = () => {
     };
   }, []);
 
-  const resetMessage = () => {
-    setMessages([]);
-    localStorage.removeItem('messages');
+  const saveMessagesToLocalStorage = (messages: Message[]) => {
+    const messagesByDateTimeString = localStorage.getItem(MESSAGES_STORAGE_KEY);
+
+    // 처음 저장하는 경우
+    if (!messagesByDateTimeString) {
+      const value = { [currentMessageKey]: messages };
+      localStorage.setItem(MESSAGES_STORAGE_KEY, JSON.stringify(value));
+      return;
+    }
+
+    try {
+      const messagesByDateTime: MessagesByDateTime = JSON.parse(
+        messagesByDateTimeString
+      );
+
+      // 새로운 messages 업데이트
+      messagesByDateTime[currentMessageKey] = messages;
+      localStorage.setItem(
+        MESSAGES_STORAGE_KEY,
+        JSON.stringify(messagesByDateTime)
+      );
+    } catch {
+      console.warn('Invalid saved messages.');
+    }
   };
 
   const sendMessage = async (data: { userMessage: string }) => {
@@ -142,7 +185,7 @@ const ChatBox = () => {
               { role: 'assistant', content: assistantMessage },
             ];
 
-            localStorage.setItem('messages', JSON.stringify(updatedMessages));
+            saveMessagesToLocalStorage(updatedMessages);
 
             return updatedMessages;
           });
@@ -169,12 +212,12 @@ const ChatBox = () => {
   };
 
   const handleChangeModel = (selectedModel: OpenAiModel) => {
-    localStorage.setItem('model', selectedModel);
+    localStorage.setItem(MODEL_STORAGE_KEY, selectedModel);
     setSelectedModel(selectedModel);
   };
 
   const handleChangeFontSize = (fontSize: FontSize) => {
-    localStorage.setItem('fontSize', fontSize);
+    localStorage.setItem(FONT_SIZE_STORAGE_KEY, fontSize);
     setFontSize(fontSize);
   };
 
@@ -274,18 +317,6 @@ const ChatBox = () => {
               Send{' '}
               <span className="hidden text-xs lg:inline">(CMD + Enter)</span>
             </AnimatedButton>
-            <button
-              disabled={isLoading}
-              className={classNames(
-                'border border-blue-400 text-blue-400 rounded-md px-3 py-2',
-                {
-                  'border-gray-200 text-gray-200 cursor-not-allowed': isLoading,
-                }
-              )}
-              onClick={resetMessage}
-            >
-              Reset
-            </button>
           </div>
         </aside>
       </div>
