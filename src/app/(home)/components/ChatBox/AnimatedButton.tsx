@@ -2,6 +2,7 @@ import classNames from 'classnames';
 
 import styles from './AnimatedButton.module.scss';
 import { useLayoutEffect, useRef, useState } from 'react';
+import { throttle } from 'es-toolkit';
 
 interface AnimatedButtonProps {
   children: React.ReactNode;
@@ -17,10 +18,22 @@ const AnimatedButton = ({
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [backgroundSize, setBackgroundSize] = useState<number | null>(null);
 
-  useLayoutEffect(() => {
+  const updateBackgroundSize = () => {
     if (buttonRef.current?.offsetWidth) {
       setBackgroundSize(buttonRef.current.offsetWidth * 1.5);
     }
+  };
+
+  const throttledUpdateBackgroundSize = throttle(updateBackgroundSize, 100);
+
+  useLayoutEffect(() => {
+    updateBackgroundSize();
+    window.addEventListener('resize', throttledUpdateBackgroundSize);
+
+    return () => {
+      window.removeEventListener('resize', throttledUpdateBackgroundSize);
+      throttledUpdateBackgroundSize.cancel(); // Cancel any pending throttled calls
+    };
   }, []);
 
   return (
