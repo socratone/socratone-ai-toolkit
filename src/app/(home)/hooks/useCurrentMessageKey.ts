@@ -45,7 +45,7 @@ const useCurrentMessageKey = () => {
       const messagesByDateTimeString =
         localStorage.getItem(MESSAGES_STORAGE_KEY);
       try {
-        // 저장된 값이 있는 경우
+        // localStorage에 저장된 값이 있는 경우
         if (messagesByDateTimeString) {
           const messagesByDateTime: MessagesByDateTime = JSON.parse(
             messagesByDateTimeString
@@ -54,6 +54,9 @@ const useCurrentMessageKey = () => {
           // 최근 키를 currentMessageKey로 설정
           const latestKey = getLatestKey(messagesByDateTime);
           updateCurrentMessageKey(latestKey);
+        } else {
+          // localStorage에 저장된 값이 없는 경우
+          updateNewCurrentMessageKey();
         }
       } catch {
         console.warn('Invalid saved messages.');
