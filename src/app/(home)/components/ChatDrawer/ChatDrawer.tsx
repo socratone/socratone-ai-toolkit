@@ -7,6 +7,7 @@ import useSavedMessages from '../../hooks/useSavedMessages';
 import { useEffect, useState } from 'react';
 import { MessageHistory, MessagesByDateTime } from '@/types';
 import { MESSAGES_STORAGE_KEY } from '@/constants';
+import TrashIcon from './icons/TrashIcon';
 
 interface ChatDrawerProps {
   open: boolean;
@@ -114,7 +115,7 @@ const ChatDrawer = ({ open, onClose }: ChatDrawerProps) => {
                 className="min-h-8 px-2 flex items-center text-sm text-gray-500"
                 onClick={() => handleMessageDelete(message.date)}
               >
-                Del
+                <TrashIcon />
               </button>
             </li>
           ))}
