@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { MessageHistory, MessagesByDateTime } from '@/types';
 import { MESSAGES_STORAGE_KEY } from '@/constants';
 import TrashIcon from './icons/TrashIcon';
+import dayjs from 'dayjs';
 
 interface ChatDrawerProps {
   open: boolean;
@@ -26,7 +27,7 @@ const ChatDrawer = ({ open, onClose }: ChatDrawerProps) => {
   } = useSavedMessages();
 
   const convertToTitle = (content: string) => {
-    return content.substring(0, 18);
+    return content.substring(0, 24);
   };
 
   const convertToMessageHistories = (
@@ -106,17 +107,22 @@ const ChatDrawer = ({ open, onClose }: ChatDrawerProps) => {
           {messageHistories.map((message) => (
             <li key={message.date} className="min-h-8 flex justify-between">
               <button
-                className="min-h-8 px-2 flex-grow flex items-center text-lg"
+                className="py-1 px-2 flex-grow flex flex-col justify-start text-lg"
                 onClick={() => handleMessageHistoryClick(message.date)}
               >
-                {message.title}
+                <span className="block">{message.title}</span>
+                <span className="block text-sm text-gray-500">
+                  {dayjs(message.date).format('YY.MM.DD HH:mm')}
+                </span>
               </button>
-              <button
-                className="min-h-8 px-2 flex items-center text-sm text-gray-500"
-                onClick={() => handleMessageDelete(message.date)}
-              >
-                <TrashIcon />
-              </button>
+              <div className="flex items-center">
+                <button
+                  className="min-h-8 px-2 flex items-center text-sm text-gray-500 hover:text-red-500"
+                  onClick={() => handleMessageDelete(message.date)}
+                >
+                  <TrashIcon />
+                </button>
+              </div>
             </li>
           ))}
         </ul>
