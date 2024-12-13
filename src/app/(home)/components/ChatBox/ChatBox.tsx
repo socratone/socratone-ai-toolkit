@@ -15,19 +15,16 @@ import ScrollButton from './ScrollButton';
 import { debounce } from 'es-toolkit';
 import { modelOptions, systemMessage } from './constants';
 import AnimatedButton from './AnimatedButton';
-import {
-  FONT_SIZE_STORAGE_KEY,
-  MESSAGES_STORAGE_KEY,
-  MODEL_STORAGE_KEY,
-} from '@/constants';
-import useCurrentMessageKey from '../../hooks/useCurrentMessageKey';
+import { FONT_SIZE_STORAGE_KEY, MODEL_STORAGE_KEY } from '@/constants';
+import useSavedMessages from '../../hooks/useSavedMessages';
 
 interface ChatBoxProps {
   onOpenMenu: () => void;
 }
 
 const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
-  const { currentMessageKey } = useCurrentMessageKey();
+  const { currentMessageKey, messagesByDateTime, saveMessages } =
+    useSavedMessages();
 
   const { register, handleSubmit, reset } = useForm<{ userMessage: string }>({
     defaultValues: { userMessage: '' },
@@ -48,34 +45,14 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
   // 키에 해당하는 messages 초기화
   useEffect(() => {
     if (currentMessageKey) {
-      (() => {
-        const messagesByDateTimeString =
-          localStorage.getItem(MESSAGES_STORAGE_KEY);
-
-        // 저장된 값이 없는 경우
-        if (!messagesByDateTimeString) {
-          setMessages([]);
-          return;
-        }
-
-        try {
-          const messagesByDateTime: MessagesByDateTime = JSON.parse(
-            messagesByDateTimeString
-          );
-
-          // 저장된 키에 해당하는 messages가 있는 경우
-          if (messagesByDateTime[currentMessageKey]) {
-            setMessages(messagesByDateTime[currentMessageKey]);
-          } else {
-            // 없는 경우
-            setMessages([]);
-          }
-        } catch {
-          console.warn('Invalid saved messages.');
-        }
-      })();
+      // 저장된 키에 해당하는 messages가 있는 경우
+      if (messagesByDateTime[currentMessageKey]) {
+        setMessages(messagesByDateTime[currentMessageKey]);
+      } else {
+        setMessages([]);
+      }
     }
-  }, [currentMessageKey]);
+  }, [currentMessageKey, messagesByDateTime]);
 
   // model 값 불러오기
   useEffect(() => {
@@ -119,34 +96,6 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
       mainElement?.removeEventListener('scroll', handleScroll);
     };
   }, []);
-
-  const saveMessagesToLocalStorage = (messages: Message[]) => {
-    if (!currentMessageKey) return;
-
-    const messagesByDateTimeString = localStorage.getItem(MESSAGES_STORAGE_KEY);
-
-    // 처음 저장하는 경우
-    if (!messagesByDateTimeString) {
-      const value = { [currentMessageKey]: messages };
-      localStorage.setItem(MESSAGES_STORAGE_KEY, JSON.stringify(value));
-      return;
-    }
-
-    try {
-      const messagesByDateTime: MessagesByDateTime = JSON.parse(
-        messagesByDateTimeString
-      );
-
-      // 새로운 messages 업데이트
-      messagesByDateTime[currentMessageKey] = messages;
-      localStorage.setItem(
-        MESSAGES_STORAGE_KEY,
-        JSON.stringify(messagesByDateTime)
-      );
-    } catch {
-      console.warn('Invalid saved messages.');
-    }
-  };
 
   const sendMessage = async (data: { userMessage: string }) => {
     const userMessage = data.userMessage.trim();
@@ -195,7 +144,9 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
               { role: 'assistant', content: assistantMessage },
             ];
 
-            saveMessagesToLocalStorage(updatedMessages);
+            if (currentMessageKey) {
+              saveMessages(currentMessageKey, updatedMessages);
+            }
 
             return updatedMessages;
           });

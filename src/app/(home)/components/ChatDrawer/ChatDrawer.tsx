@@ -1,12 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Drawer from './Drawer';
 import CloseIcon from './icons/CloseIcon';
 import Link from 'next/link';
-import { MESSAGES_STORAGE_KEY } from '@/constants';
-import { MessagesByDateTime } from '@/types';
-import useCurrentMessageKey from '../../hooks/useCurrentMessageKey';
+import useSavedMessages from '../../hooks/useSavedMessages';
+import { useEffect } from 'react';
 
 interface ChatDrawerProps {
   open: boolean;
@@ -14,42 +12,20 @@ interface ChatDrawerProps {
 }
 
 const ChatDrawer = ({ open, onClose }: ChatDrawerProps) => {
-  const { updateCurrentMessageKey, updateNewCurrentMessageKey } =
-    useCurrentMessageKey();
+  const {
+    updateCurrentMessageKey,
+    updateNewCurrentMessageKey,
+    messageHistories,
+    refreshMessageHistories,
+  } = useSavedMessages();
 
-  const [messageHistories, setMessageHistories] = useState<
-    { date: string; title: string }[]
-  >([]);
-
-  // 메시지 히스토리 리스트 초기화
   useEffect(() => {
-    const messagesByDateTimeString = localStorage.getItem(MESSAGES_STORAGE_KEY);
-    try {
-      // 저장된 값이 있는 경우
-      if (messagesByDateTimeString) {
-        const messagesByDateTime: MessagesByDateTime = JSON.parse(
-          messagesByDateTimeString
-        );
-
-        const messageHistories = Object.entries(messagesByDateTime).map(
-          ([dateKey, messages]) => {
-            const firstUserContent =
-              messages.find((message) => message.role === 'user')?.content ??
-              '없음';
-
-            return {
-              date: dateKey,
-              title: firstUserContent?.substring(0, 12),
-            };
-          }
-        );
-
-        setMessageHistories(messageHistories.reverse());
-      }
-    } catch {
-      console.warn('Invalid saved messages.');
+    if (open) {
+      setTimeout(() => {
+        refreshMessageHistories();
+      }, 0);
     }
-  }, []);
+  }, [open]);
 
   const handleClickNew = () => {
     updateNewCurrentMessageKey();
