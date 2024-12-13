@@ -1,6 +1,6 @@
 import { MESSAGES_STORAGE_KEY } from '@/constants';
 import { Message, MessagesByDateTime } from '@/types';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import dayjs from 'dayjs';
 import { create } from 'zustand';
 
@@ -31,10 +31,6 @@ const useMessageStore = create<CurrentMessageKeyState>((set) => ({
 }));
 
 const useSavedMessages = () => {
-  const [messageHistories, setMessageHistories] = useState<
-    { date: string; title: string }[]
-  >([]);
-
   const currentMessageKey = useMessageStore((state) => state.currentMessageKey);
   const messagesByDateTime = useMessageStore(
     (state) => state.messagesByDateTime
@@ -48,24 +44,6 @@ const useSavedMessages = () => {
 
   const updateNewCurrentMessageKey = () => {
     updateCurrentMessageKey(getNowKey());
-  };
-
-  const convertToTitle = (content: string) => {
-    return content.substring(0, 12);
-  };
-
-  const convertToMessageHistories = (
-    messagesByDateTime: MessagesByDateTime
-  ) => {
-    return Object.entries(messagesByDateTime).map(([dateKey, messages]) => {
-      const firstUserContent =
-        messages.find((message) => message.role === 'user')?.content ?? '없음';
-
-      return {
-        date: dateKey,
-        title: convertToTitle(firstUserContent),
-      };
-    });
   };
 
   // 초기 currentMessageKey 설정
@@ -87,12 +65,6 @@ const useSavedMessages = () => {
           // 최근 키를 currentMessageKey로 설정
           const latestKey = getLatestKey(messagesByDateTime);
           updateCurrentMessageKey(latestKey);
-
-          // messageHistories 초기화
-          const messageHistories =
-            convertToMessageHistories(messagesByDateTime);
-
-          setMessageHistories(messageHistories.reverse());
         } else {
           // localStorage에 저장된 값이 없는 경우
           updateNewCurrentMessageKey();
@@ -124,19 +96,27 @@ const useSavedMessages = () => {
     );
   };
 
-  const refreshMessageHistories = () => {
-    const messageHistories = convertToMessageHistories(messagesByDateTime);
-    setMessageHistories(messageHistories.reverse());
+  const deleteMessages = (messageKey: string) => {
+    const newMessagesByDateTime = {
+      ...messagesByDateTime,
+    };
+
+    delete newMessagesByDateTime[messageKey];
+
+    updateMessagesByDateTime(newMessagesByDateTime);
+    localStorage.setItem(
+      MESSAGES_STORAGE_KEY,
+      JSON.stringify(newMessagesByDateTime)
+    );
   };
 
   return {
     currentMessageKey,
     updateCurrentMessageKey,
     updateNewCurrentMessageKey,
-    messageHistories,
     messagesByDateTime,
     saveMessages,
-    refreshMessageHistories,
+    deleteMessages,
   };
 };
 

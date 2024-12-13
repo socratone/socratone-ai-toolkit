@@ -6,3 +6,8 @@ export type Message = {
 };
 
 export type MessagesByDateTime = Record<string, Message[]>;
+
+export type MessageHistory = {
+  date: string;
+  title: string;
+};
