@@ -242,7 +242,7 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
           </div>
         ) : null}
       </main>
-      <aside className="relative flex gap-2 p-3 border-t flex-shrink-0 lg:border-t-0 lg:border-l lg:flex-col lg:w-96">
+      <aside className="relative flex flex-col gap-2 p-3 border-t flex-shrink-0 lg:border-t-0 lg:border-l lg:w-96">
         <ScrollButton
           direction={scrollButtonDirection}
           onClick={handleScrollButtonClick}
@@ -274,7 +274,7 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
             disabled={isLoading}
             onClick={handleSubmit(sendMessage)}
           >
-            Send <span className="hidden text-xs lg:inline">(CMD + Enter)</span>
+            Chat <span className="text-xs">(CMD + Enter)</span>
           </AnimatedButton>
         </div>
       </aside>

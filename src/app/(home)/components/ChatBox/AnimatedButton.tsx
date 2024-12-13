@@ -40,7 +40,7 @@ const AnimatedButton = ({
     <button
       ref={buttonRef}
       disabled={disabled}
-      className={classNames(styles.button, 'rounded-md px-3 py-2', {
+      className={classNames(styles.button, 'rounded-md px-6 py-4', {
         'bg-gray-200 cursor-not-allowed': disabled,
       })}
       onClick={onClick}
