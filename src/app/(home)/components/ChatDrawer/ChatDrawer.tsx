@@ -66,12 +66,12 @@ const ChatDrawer = ({ open, onClose }: ChatDrawerProps) => {
     }
   }, [open]);
 
-  const handleClickNew = () => {
+  const handleNewClick = () => {
     updateNewCurrentMessageKey();
     onClose();
   };
 
-  const handleClickMessageHistory = (date: string) => {
+  const handleMessageHistoryClick = (date: string) => {
     updateCurrentMessageKey(date);
     onClose();
   };
@@ -95,7 +95,7 @@ const ChatDrawer = ({ open, onClose }: ChatDrawerProps) => {
           </button>
           <button
             className="min-h-8 px-2 block items-center text-lg w-full text-start"
-            onClick={handleClickNew}
+            onClick={handleNewClick}
           >
             새로운 채팅
           </button>
@@ -106,7 +106,7 @@ const ChatDrawer = ({ open, onClose }: ChatDrawerProps) => {
             <li key={message.date} className="min-h-8 flex justify-between">
               <button
                 className="min-h-8 px-2 flex-grow flex items-center text-lg"
-                onClick={() => handleClickMessageHistory(message.date)}
+                onClick={() => handleMessageHistoryClick(message.date)}
               >
                 {message.title}
               </button>

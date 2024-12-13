@@ -172,17 +172,17 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
     }
   };
 
-  const handleChangeModel = (selectedModel: OpenAiModel) => {
+  const handleModelChange = (selectedModel: OpenAiModel) => {
     localStorage.setItem(MODEL_STORAGE_KEY, selectedModel);
     setSelectedModel(selectedModel);
   };
 
-  const handleChangeFontSize = (fontSize: FontSize) => {
+  const handleFontSizeChange = (fontSize: FontSize) => {
     localStorage.setItem(FONT_SIZE_STORAGE_KEY, fontSize);
     setFontSize(fontSize);
   };
 
-  const handleClickScrollButton = () => {
+  const handleScrollButtonClick = () => {
     if (!mainRef.current) return;
 
     if (scrollButtonDirection === 'up') {
@@ -209,10 +209,10 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
         </button>
         <div className="flex flex-col gap-3 w-full">
           <div className="flex justify-end items-center gap-1">
-            <ZoomButton value={fontSize} onChange={handleChangeFontSize} />
+            <ZoomButton value={fontSize} onChange={handleFontSizeChange} />
             <Select
               value={selectedModel}
-              onChange={handleChangeModel}
+              onChange={handleModelChange}
               options={modelOptions}
             />
           </div>
@@ -245,7 +245,7 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
       <aside className="relative flex gap-2 p-3 border-t flex-shrink-0 lg:border-t-0 lg:border-l lg:flex-col lg:w-96">
         <ScrollButton
           direction={scrollButtonDirection}
-          onClick={handleClickScrollButton}
+          onClick={handleScrollButtonClick}
           className="hidden absolute bottom-3 right-full mr-3 lg:flex"
         />
         <div className="w-full relative flex-grow">

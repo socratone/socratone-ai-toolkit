@@ -10,7 +10,7 @@ const Drawer = ({ open, onClose, children }: DrawerProps) => {
   const drawerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleOutsideClick = (event: MouseEvent) => {
       if (
         drawerRef.current &&
         !drawerRef.current.contains(event.target as Node)
@@ -20,13 +20,13 @@ const Drawer = ({ open, onClose, children }: DrawerProps) => {
     };
 
     if (open) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('mousedown', handleOutsideClick);
     } else {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('mousedown', handleOutsideClick);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('mousedown', handleOutsideClick);
     };
   }, [open, onClose]);
 
