@@ -27,7 +27,7 @@ const ChatDrawer = ({ open, onClose }: ChatDrawerProps) => {
   } = useSavedMessages();
 
   const convertToTitle = (content: string) => {
-    return content.substring(0, 24);
+    return content.substring(0, 30);
   };
 
   const convertToMessageHistories = (
@@ -107,10 +107,12 @@ const ChatDrawer = ({ open, onClose }: ChatDrawerProps) => {
           {messageHistories.map((message) => (
             <li key={message.date} className="min-h-8 flex justify-between">
               <button
-                className="py-1 px-2 flex-grow flex flex-col justify-start text-lg"
+                className="py-1 px-2 flex-grow flex flex-col justify-start text-lg overflow-x-auto"
                 onClick={() => handleMessageHistoryClick(message.date)}
               >
-                <span className="block">{message.title}</span>
+                <span className="block truncate max-w-full">
+                  {message.title}
+                </span>
                 <span className="block text-sm text-gray-500">
                   {dayjs(message.date).format('YY.MM.DD HH:mm')}
                 </span>
