@@ -75,7 +75,6 @@ const ChatDrawer = ({ open, onClose }: ChatDrawerProps) => {
 
   const handleMessageHistoryClick = (date: string) => {
     updateCurrentMessageKey(date);
-    onClose();
   };
 
   const handleMessageDelete = (date: string) => {
