@@ -10,7 +10,7 @@ const getNowKey = () => {
   return dayjs().format(DATE_FORMAT);
 };
 
-const getLatestKey = (obj: Record<string, any>): string => {
+const getLatestKey = (obj: Record<string, Message[]>): string => {
   return Object.keys(obj).reduce((latest, current) => {
     return dayjs(current).isAfter(dayjs(latest)) ? current : latest;
   });
