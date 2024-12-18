@@ -82,7 +82,8 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
       if (!mainRef.current) return;
 
       const { scrollTop, scrollHeight, clientHeight } = mainRef.current;
-      if (scrollTop > (scrollHeight - clientHeight) / 2) {
+      // 스크롤이 제일 아래에 있을 때에만 'up'으로 설정
+      if (scrollTop >= scrollHeight - clientHeight) {
         setScrollButtonDirection('up');
       } else {
         setScrollButtonDirection('down');
