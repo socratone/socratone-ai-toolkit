@@ -11,16 +11,19 @@ const ScrollButton = ({ direction, onClick, className }: ScrollButtonProps) => {
   return (
     <button
       className={classNames(
-        'flex justify-center items-center size-10 transition-transform duration-300',
-        {
-          'transform rotate-180': direction === 'up',
-          'transform rotate-0': direction === 'down',
-        },
+        'flex justify-center items-center size-10 rounded-full border bg-white shadow',
         className
       )}
       onClick={onClick}
     >
-      <ChevronIcon />
+      <div
+        className={classNames('transition-transform duration-300 ', {
+          'transform rotate-180': direction === 'up',
+          'transform rotate-0': direction === 'down',
+        })}
+      >
+        <ChevronIcon />
+      </div>
     </button>
   );
 };

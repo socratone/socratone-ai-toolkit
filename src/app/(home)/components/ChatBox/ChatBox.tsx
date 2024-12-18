@@ -8,7 +8,7 @@ import AssistantMessage from './AssistantMessage';
 import EllipsisLoader from './EllipsisLoader';
 import classNames from 'classnames';
 import Select from '@/components/Select';
-import { Message, MessagesByDateTime, OpenAiModel } from '@/types';
+import { Message, OpenAiModel } from '@/types';
 import ZoomButton from './ZoomButton';
 import MenuIcon from './icons/MenuIcon';
 import ScrollButton from './ScrollButton';
@@ -29,9 +29,6 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
   const { register, handleSubmit, reset } = useForm<{ userMessage: string }>({
     defaultValues: { userMessage: '' },
   });
-  const [scrollButtonDirection, setScrollButtonDirection] = useState<
-    'down' | 'up'
-  >('down');
   const [fontSize, setFontSize] = useState<FontSize>('text-base');
   const [messages, setMessages] = useState<Message[]>([]);
   const [selectedModel, setSelectedModel] =
@@ -75,28 +72,6 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
       textareaRef.current?.focus();
     }
   }, [isLoading]);
-
-  // 스크롤에 따라 버튼 방향 조절
-  useEffect(() => {
-    const handleScroll = debounce(() => {
-      if (!mainRef.current) return;
-
-      const { scrollTop, scrollHeight, clientHeight } = mainRef.current;
-      // 스크롤이 제일 아래에 있을 때에만 'up'으로 설정
-      if (scrollTop >= scrollHeight - clientHeight) {
-        setScrollButtonDirection('up');
-      } else {
-        setScrollButtonDirection('down');
-      }
-    }, 200);
-
-    const mainElement = mainRef.current;
-    mainElement?.addEventListener('scroll', handleScroll);
-
-    return () => {
-      mainElement?.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
 
   const sendMessage = async (data: { userMessage: string }) => {
     const userMessage = data.userMessage.trim();
@@ -185,18 +160,10 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
 
   const handleScrollButtonClick = () => {
     if (!mainRef.current) return;
-
-    if (scrollButtonDirection === 'up') {
-      mainRef.current.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-      });
-    } else {
-      mainRef.current.scrollTo({
-        top: 1_000_000_000,
-        behavior: 'smooth',
-      });
-    }
+    mainRef.current.scrollTo({
+      top: 1_000_000_000,
+      behavior: 'smooth',
+    });
   };
 
   return (
@@ -245,7 +212,7 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
       </main>
       <aside className="relative flex flex-col gap-2 p-3 border-t flex-shrink-0 lg:border-t-0 lg:border-l lg:w-96">
         <ScrollButton
-          direction={scrollButtonDirection}
+          direction="down"
           onClick={handleScrollButtonClick}
           className="hidden absolute bottom-3 right-full mr-3 lg:flex"
         />
