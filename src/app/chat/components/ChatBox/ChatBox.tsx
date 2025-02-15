@@ -197,7 +197,7 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
           <MenuIcon />
         </button>
         <div className="flex flex-col gap-3 w-full">
-          <div className="flex justify-end items-center gap-1">
+          <header className="flex justify-end items-center gap-1 flex-wrap">
             <Checkbox
               checked={devChecked}
               onCheckedChange={handleDevCheckedChange}
@@ -209,7 +209,7 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
               onChange={handleModelChange}
               options={modelOptions}
             />
-          </div>
+          </header>
           {messages.map((msg, index) => {
             if (msg.role === 'user') {
               return (
