@@ -8,12 +8,14 @@ interface AnimatedButtonProps {
   children: React.ReactNode;
   onClick: () => void;
   disabled?: boolean;
+  size?: 'small' | 'medium';
 }
 
 const AnimatedButton = ({
   children,
   onClick,
   disabled,
+  size = 'medium',
 }: AnimatedButtonProps) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [backgroundSize, setBackgroundSize] = useState<number | null>(null);
@@ -40,8 +42,10 @@ const AnimatedButton = ({
     <button
       ref={buttonRef}
       disabled={disabled}
-      className={classNames(styles.button, 'rounded-md px-6 py-4', {
+      className={classNames(styles.button, 'rounded-md', {
         'bg-gray-200 cursor-not-allowed': disabled,
+        'px-6 py-4': size === 'medium',
+        'px-3 py-2': size === 'small',
       })}
       onClick={onClick}
     >
@@ -52,7 +56,12 @@ const AnimatedButton = ({
           height: backgroundSize ?? '1000%',
         }}
       />
-      <span className={styles.text}>{children}</span>
+      <span
+        className={styles.text}
+        style={{ fontSize: size === 'small' ? '16px' : '20px' }}
+      >
+        {children}
+      </span>
     </button>
   );
 };
