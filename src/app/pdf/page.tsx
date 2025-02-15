@@ -1,26 +1,28 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import AnimatedButton from '../../components/AnimatedButton/AnimatedButton';
+import AnimatedButton from '@/components/AnimatedButton';
+import { API_URL } from '@/constants';
 
 const Pdf = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [file, setFile] = useState<File | null>(null);
+  const [text, setText] = useState<string | null>(null);
 
   const uploadFile = async (file: File) => {
     const formData = new FormData();
     formData.append('file', file);
 
     try {
-      // TODO: api 수정 필요
-      const response = await fetch('/api/text-from-pdf', {
+      const response = await fetch(`${API_URL}/text-from-pdf`, {
         method: 'POST',
         body: formData,
       });
 
       if (response.ok) {
-        console.log('File uploaded successfully');
+        const data = await response.json();
+        setText(data.text);
       } else {
         console.error('Failed to upload file');
       }
@@ -56,6 +58,9 @@ const Pdf = () => {
           />
           파일을 선택해주세요
         </AnimatedButton>
+      </div>
+      <div className="px-2 pb-2">
+        <p>{text}</p>
       </div>
     </>
   );
