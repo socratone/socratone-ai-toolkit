@@ -36,7 +36,7 @@ const Markdown = ({ content }: MarkdownProps) => {
       className={styles.markdown}
       rehypePlugins={[rehypeHighlight]} // 코드 하이라이팅 플러그인
       components={{
-        code({ node, className, children, ...props }) {
+        code({ className, children, ...props }) {
           const match = /language-(\w+)/.exec(className || '');
           const codeId = generateId();
 

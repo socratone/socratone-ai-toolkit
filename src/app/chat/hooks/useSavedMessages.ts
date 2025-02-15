@@ -1,6 +1,6 @@
 import { MESSAGES_STORAGE_KEY } from '@/constants';
 import { Message, MessagesByDateTime } from '@/types';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import dayjs from 'dayjs';
 import { create } from 'zustand';
 
@@ -42,9 +42,9 @@ const useSavedMessages = () => {
     (state) => state.updateCurrentMessageKey
   );
 
-  const updateNewCurrentMessageKey = () => {
+  const updateNewCurrentMessageKey = useCallback(() => {
     updateCurrentMessageKey(getNowKey());
-  };
+  }, [updateCurrentMessageKey]);
 
   // 초기 currentMessageKey 설정
   useEffect(() => {
@@ -73,7 +73,12 @@ const useSavedMessages = () => {
         console.warn('Invalid saved messages.');
       }
     }
-  }, [currentMessageKey]);
+  }, [
+    currentMessageKey,
+    updateCurrentMessageKey,
+    updateMessagesByDateTime,
+    updateNewCurrentMessageKey,
+  ]);
 
   const saveMessages = (messageKey: string, messages: Message[]) => {
     // 처음 저장하는 경우

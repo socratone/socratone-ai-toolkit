@@ -20,15 +20,15 @@ const AnimatedButton = ({
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [backgroundSize, setBackgroundSize] = useState<number | null>(null);
 
-  const updateBackgroundSize = () => {
-    if (buttonRef.current?.offsetWidth) {
-      setBackgroundSize(buttonRef.current.offsetWidth * 1.5);
-    }
-  };
-
-  const throttledUpdateBackgroundSize = throttle(updateBackgroundSize, 100);
-
   useLayoutEffect(() => {
+    const updateBackgroundSize = () => {
+      if (buttonRef.current?.offsetWidth) {
+        setBackgroundSize(buttonRef.current.offsetWidth * 1.5);
+      }
+    };
+
+    const throttledUpdateBackgroundSize = throttle(updateBackgroundSize, 100);
+
     updateBackgroundSize();
     window.addEventListener('resize', throttledUpdateBackgroundSize);
 

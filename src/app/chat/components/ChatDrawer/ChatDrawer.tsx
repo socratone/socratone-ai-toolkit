@@ -26,26 +26,27 @@ const ChatDrawer = ({ open, onClose }: ChatDrawerProps) => {
     deleteMessages,
   } = useSavedMessages();
 
-  const convertToTitle = (content: string) => {
-    return content.substring(0, 30);
-  };
-
-  const convertToMessageHistories = (
-    messagesByDateTime: MessagesByDateTime
-  ) => {
-    return Object.entries(messagesByDateTime).map(([dateKey, messages]) => {
-      const firstUserContent =
-        messages.find((message) => message.role === 'user')?.content ?? '없음';
-
-      return {
-        date: dateKey,
-        title: convertToTitle(firstUserContent),
-      };
-    });
-  };
-
   // messageHistories 초기화
   useEffect(() => {
+    const convertToTitle = (content: string) => {
+      return content.substring(0, 30);
+    };
+
+    const convertToMessageHistories = (
+      messagesByDateTime: MessagesByDateTime
+    ) => {
+      return Object.entries(messagesByDateTime).map(([dateKey, messages]) => {
+        const firstUserContent =
+          messages.find((message) => message.role === 'user')?.content ??
+          '없음';
+
+        return {
+          date: dateKey,
+          title: convertToTitle(firstUserContent),
+        };
+      });
+    };
+
     if (open) {
       const messagesByDateTimeString =
         localStorage.getItem(MESSAGES_STORAGE_KEY);
