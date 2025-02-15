@@ -12,10 +12,15 @@ import { Message, OpenAiModel } from '@/types';
 import ZoomButton from './ZoomButton';
 import MenuIcon from './icons/MenuIcon';
 import ScrollButton from './ScrollButton';
-import { modelOptions, systemMessage } from './constants';
+import { devSystemMessage, modelOptions, systemMessage } from './constants';
 import AnimatedButton from '@/components/AnimatedButton';
-import { FONT_SIZE_STORAGE_KEY, MODEL_STORAGE_KEY } from '@/constants';
+import {
+  DEV_CHECKED_STORAGE_KEY,
+  FONT_SIZE_STORAGE_KEY,
+  MODEL_STORAGE_KEY,
+} from '@/constants';
 import useSavedMessages from '../../hooks/useSavedMessages';
+import Checkbox from '@/components/Checkbox';
 
 interface ChatBoxProps {
   onOpenMenu: () => void;
@@ -32,6 +37,7 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [selectedModel, setSelectedModel] =
     useState<OpenAiModel>('gpt-4o-mini');
+  const [devChecked, setDevChecked] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -66,6 +72,14 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
     }
   }, []);
 
+  // 개발자 체크박스 값 불러오기
+  useEffect(() => {
+    const savedDevChecked = localStorage.getItem(DEV_CHECKED_STORAGE_KEY);
+    if (typeof savedDevChecked === 'string') {
+      setDevChecked(savedDevChecked === 'true');
+    }
+  }, []);
+
   useEffect(() => {
     if (!isLoading) {
       textareaRef.current?.focus();
@@ -87,7 +101,10 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: [systemMessage, ...updatedMessages],
+          messages: [
+            devChecked ? devSystemMessage : systemMessage,
+            ...updatedMessages,
+          ],
           model: selectedModel,
         }),
       });
@@ -157,6 +174,11 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
     setFontSize(fontSize);
   };
 
+  const handleDevCheckedChange = (checked: boolean) => {
+    localStorage.setItem(DEV_CHECKED_STORAGE_KEY, checked.toString());
+    setDevChecked(checked);
+  };
+
   const handleScrollButtonClick = () => {
     if (!mainRef.current) return;
     mainRef.current.scrollTo({
@@ -176,6 +198,11 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
         </button>
         <div className="flex flex-col gap-3 w-full">
           <div className="flex justify-end items-center gap-1">
+            <Checkbox
+              checked={devChecked}
+              onCheckedChange={handleDevCheckedChange}
+              label="개발자 모드"
+            />
             <ZoomButton value={fontSize} onChange={handleFontSizeChange} />
             <Select
               value={selectedModel}
