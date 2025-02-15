@@ -19,3 +19,8 @@ body {
   background: var(--background);
   font-family: 'Pretendard', sans-serif;
 }
+
+input,
+button {
+  outline: none;
+}

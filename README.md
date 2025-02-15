@@ -45,6 +45,14 @@ pnpm start
 
 http://localhost:4000
 
+## 서버 실행 방법
+
+도커가 설치돼 있어야 한다.
+
+```
+docker-compose up --build
+```
+
 ## 사용량 확인
 
 https://platform.openai.com/settings/organization/usage
