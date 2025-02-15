@@ -13,7 +13,7 @@ import ZoomButton from './ZoomButton';
 import MenuIcon from './icons/MenuIcon';
 import ScrollButton from './ScrollButton';
 import { modelOptions, systemMessage } from './constants';
-import AnimatedButton from './AnimatedButton';
+import AnimatedButton from '@/components/AnimatedButton';
 import { FONT_SIZE_STORAGE_KEY, MODEL_STORAGE_KEY } from '@/constants';
 import useSavedMessages from '../../hooks/useSavedMessages';
 
