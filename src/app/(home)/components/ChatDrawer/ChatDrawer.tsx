@@ -109,10 +109,10 @@ const ChatDrawer = ({ open, onClose }: ChatDrawerProps) => {
                 className="py-1 px-2 flex-grow flex flex-col justify-start text-lg overflow-x-auto"
                 onClick={() => handleMessageHistoryClick(message.date)}
               >
-                <span className="block truncate max-w-full">
+                <span className="block truncate max-w-full text-start">
                   {message.title}
                 </span>
-                <span className="block text-sm text-gray-500">
+                <span className="block text-sm text-gray-500 text-start">
                   {dayjs(message.date).format('YY.MM.DD HH:mm')}
                 </span>
               </button>
