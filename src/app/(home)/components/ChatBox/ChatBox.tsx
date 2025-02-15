@@ -12,7 +12,6 @@ import { Message, OpenAiModel } from '@/types';
 import ZoomButton from './ZoomButton';
 import MenuIcon from './icons/MenuIcon';
 import ScrollButton from './ScrollButton';
-import { debounce } from 'es-toolkit';
 import { modelOptions, systemMessage } from './constants';
 import AnimatedButton from './AnimatedButton';
 import { FONT_SIZE_STORAGE_KEY, MODEL_STORAGE_KEY } from '@/constants';
