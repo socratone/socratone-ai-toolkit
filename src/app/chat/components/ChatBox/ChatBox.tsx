@@ -209,6 +209,7 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
               checked={devChecked}
               onCheckedChange={handleDevCheckedChange}
               label="개발자 모드"
+              className="font-medium"
             />
             <ZoomButton value={fontSize} onChange={handleFontSizeChange} />
             <Select

@@ -1,14 +1,21 @@
+import { cn } from '@/utils/cn';
+
 interface CheckboxProps {
   checked: boolean;
   onCheckedChange: (checked: boolean) => void;
   label?: string;
+  className?: string;
 }
 
-const Checkbox = ({ checked, onCheckedChange, label }: CheckboxProps) => {
+const Checkbox = ({
+  checked,
+  onCheckedChange,
+  label,
+  className,
+}: CheckboxProps) => {
   return (
-    <label className="inline-flex items-center">
+    <label className={cn('inline-flex items-center cursor-pointer', className)}>
       <input
-        className="cursor-pointer"
         type="checkbox"
         checked={checked}
         onChange={(event) => onCheckedChange(event.target.checked)}
