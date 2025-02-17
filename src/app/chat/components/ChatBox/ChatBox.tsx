@@ -41,7 +41,7 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const mainRef = useRef<HTMLElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // 키에 해당하는 messages 초기화
@@ -180,24 +180,26 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
   };
 
   const handleScrollButtonClick = () => {
-    if (!mainRef.current) return;
-    mainRef.current.scrollTo({
+    if (!scrollContainerRef.current) return;
+    scrollContainerRef.current.scrollTo({
       top: 1_000_000_000,
       behavior: 'smooth',
     });
   };
 
   return (
-    <div className="flex flex-col h-screen lg:flex-row mx-auto max-w-[1920px]">
-      <main ref={mainRef} className="flex-grow overflow-y-auto p-3">
-        <button
-          className="fixed flex justify-center items-center top-3 left-3 z-10 size-10"
-          onClick={onOpenMenu}
-        >
-          <MenuIcon />
-        </button>
-        <div className="flex flex-col gap-3 w-full">
-          <header className="flex justify-end items-center gap-1 flex-wrap">
+    <main className="flex flex-col h-screen lg:flex-row mx-auto max-w-[1920px]">
+      <div ref={scrollContainerRef} className="flex-grow overflow-y-auto">
+        <header className="flex justify-between gap-1 sticky top-0 bg-white p-3 border-gray-200 border-b">
+          <div className="flex items-center">
+            <button
+              className="flex justify-center items-center size-10"
+              onClick={onOpenMenu}
+            >
+              <MenuIcon />
+            </button>
+          </div>
+          <div className="flex items-center gap-1">
             <Checkbox
               checked={devChecked}
               onCheckedChange={handleDevCheckedChange}
@@ -209,7 +211,9 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
               onChange={handleModelChange}
               options={modelOptions}
             />
-          </header>
+          </div>
+        </header>
+        <section className="flex flex-col gap-3 w-full p-3">
           {messages.map((msg, index) => {
             if (msg.role === 'user') {
               return (
@@ -229,13 +233,13 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
               />
             );
           })}
-        </div>
+        </section>
         {isLoading ? (
           <div className="flex justify-center mt-3">
             <EllipsisLoader />
           </div>
         ) : null}
-      </main>
+      </div>
       <aside className="relative flex flex-col gap-2 p-3 border-t flex-shrink-0 lg:border-t-0 lg:border-l lg:w-96">
         <ScrollButton
           direction="down"
@@ -272,7 +276,7 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
           </AnimatedButton>
         </div>
       </aside>
-    </div>
+    </main>
   );
 };
 
