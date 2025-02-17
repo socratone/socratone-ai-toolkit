@@ -9,8 +9,11 @@ const Pdf = () => {
 
   const [file, setFile] = useState<File | null>(null);
   const [text, setText] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const uploadFile = async (file: File) => {
+    setIsLoading(true);
+
     const formData = new FormData();
     formData.append('file', file);
 
@@ -28,6 +31,8 @@ const Pdf = () => {
       }
     } catch (error) {
       console.error('Failed to upload file', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -47,7 +52,7 @@ const Pdf = () => {
   return (
     <>
       <div className="flex gap-2 justify-end items-center p-2">
-        {file ? <p>{file.name}</p> : null}
+        {isLoading ? <p>Loading...</p> : file ? <p>{file.name}</p> : null}
         <AnimatedButton onClick={handleButtonClick} size="small">
           <input
             ref={fileInputRef}
@@ -60,7 +65,7 @@ const Pdf = () => {
         </AnimatedButton>
       </div>
       <div className="px-2 pb-2">
-        <p>{text}</p>
+        <p className="whitespace-pre-line">{text}</p>
       </div>
     </>
   );
