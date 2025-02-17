@@ -4,7 +4,7 @@ import PyPDF2
 pdf_blueprint = Blueprint('pdf', __name__)
 
 @pdf_blueprint.route('/text-from-pdf', methods=['POST'])
-def extract_text_from_pdf():
+def text_from_pdf():
     try:
         # 파일이 요청에 포함되어 있는지 확인
         if 'file' not in request.files:
