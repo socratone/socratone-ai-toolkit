@@ -3,3 +3,4 @@ PyPDF2
 flask-cors
 
 pytubefix
+moviepy==1.0.3
