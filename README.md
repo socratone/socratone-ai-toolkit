@@ -1,6 +1,7 @@
-# Socratone GPT
+# Socratone AI Toolkit
 
-OPENAI_API_KEY를 이용한 챗지피티 앱.\
+AI를 이용한 도구 모음 웹 어플리케이션
+
 [chatgpt.com](https://chatgpt.com) 대신 사용하기 위해 작성했습니다.\
 .env에 키를 넣고 로컬에서 사용합니다.
 
