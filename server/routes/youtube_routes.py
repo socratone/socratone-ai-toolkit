@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from pytubefix import YouTube
+from utils.youtube_downloader import download_youtube_video
 
 youtube_blueprint = Blueprint('youtube', __name__)
 
@@ -13,10 +13,7 @@ def youtube_to_text():
         return jsonify({'error': 'No URL provided'}), 400
 
     try:
-        yt = YouTube(url)
-        stream = yt.streams.filter(
-            progressive=True, file_extension='mp4').first()
-        stream.download(output_path='downloads/')  # 다운로드할 경로 설정
+        download_youtube_video(url)
         return jsonify({'message': 'Download started!'}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
