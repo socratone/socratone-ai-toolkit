@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from utils.transcribe_audio_with_whisper import transcribe_audio_with_whisper
+from utils.transcribe_audio_with_whisper import transcribe_audio_with_whisper
 from utils.download_youtube_video import download_youtube_video
 from utils.extract_audio_from_video import extract_audio_from_video
 import os

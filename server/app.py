@@ -4,7 +4,7 @@ from routes.pdf_routes import pdf_blueprint
 from routes.youtube_routes import youtube_blueprint
 
 import os
-os.environ['TRANSFORMERS_CACHE'] = './models'
+os.environ['HF_HOME'] = './models'
 
 app = Flask(__name__)
 CORS(app)

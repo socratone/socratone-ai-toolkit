@@ -4,4 +4,4 @@ flask-cors
 
 pytubefix
 moviepy==1.0.3
-openai-whisper
+transformers
