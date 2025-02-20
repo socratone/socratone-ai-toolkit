@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react';
 import AnimatedButton from '@/components/AnimatedButton';
-import { API_URL } from '@/constants';
+import { FLASK_API_URL } from '@/constants';
 
 const Pdf = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -18,7 +18,7 @@ const Pdf = () => {
     formData.append('file', file);
 
     try {
-      const response = await fetch(`${API_URL}/text-from-pdf`, {
+      const response = await fetch(`${FLASK_API_URL}/text-from-pdf`, {
         method: 'POST',
         body: formData,
       });
