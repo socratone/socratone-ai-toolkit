@@ -263,6 +263,7 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
             className={fontSize}
             placeholder="Type your message..."
             onKeyDown={handleKeyDown}
+            fullWidth
             rows={3}
           />
         </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import AnimatedButton from '@/components/AnimatedButton';
+import TextInput from '@/components/TextInput';
 import { FLASK_API_URL } from '@/constants';
 import React, { useState } from 'react';
 
@@ -37,10 +38,13 @@ const Youtube = () => {
   return (
     <div className="flex flex-col">
       <div className="flex justify-center gap-2 p-2">
-        <input
+        <TextInput
           placeholder="https://www.youtube.com/watch?v=example"
           value={youtubeUrl}
           onChange={(e) => setYoutubeUrl(e.target.value)}
+          fullWidth
+          maxWidth={500}
+          autoFocus
         />
         <AnimatedButton size="small" onClick={fetchTextFromYoutube}>
           Transcribe
