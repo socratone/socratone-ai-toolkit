@@ -44,14 +44,14 @@ const ZoomButton = ({ value, onChange }: ZoomButtonProps) => {
   return (
     <div className="flex gap-1">
       <button
-        className="size-8 flex justify-center items-center border border-gray-200 rounded-md text-gray-400"
+        className="size-8 flex justify-center items-center border border-gray-200 rounded-md text-gray-400 hover:border-black hover:text-black"
         disabled={minusDisabled}
         onClick={handleMinus}
       >
         <MinusIcon />
       </button>
       <button
-        className="size-8 flex justify-center items-center border border-gray-200 rounded-md text-gray-400"
+        className="size-8 flex justify-center items-center border border-gray-200 rounded-md text-gray-400 hover:border-black hover:text-black"
         disabled={plusDisabled}
         onClick={handlePlus}
       >
