@@ -6,19 +6,8 @@ import Select from '@/components/Select';
 import TextInput from '@/components/TextInput';
 import { ASR_MODEL_STORAGE_KEY, FLASK_API_URL } from '@/constants';
 import React, { useEffect, useState } from 'react';
-
-type AsrModel = 'openai/whisper-tiny' | 'openai/whisper-large-v3-turbo';
-
-const modelOptions: { value: AsrModel; label: string }[] = [
-  {
-    value: 'openai/whisper-tiny',
-    label: 'openai/whisper-tiny',
-  },
-  {
-    value: 'openai/whisper-large-v3-turbo',
-    label: 'openai/whisper-large-v3-turbo',
-  },
-];
+import { modelOptions } from './constants';
+import { AsrModel } from '@/types';
 
 const Youtube = () => {
   const [selectedModel, setSelectedModel] = useState<AsrModel>(
@@ -95,7 +84,7 @@ const Youtube = () => {
         </div>
       ) : isError ? (
         <p className="p-2 text-red-500">에러가 발생했습니다.</p>
-      ) : text.length > 0 ? (
+      ) : text ? (
         <p className="p-2">{text}</p>
       ) : null}
     </div>
