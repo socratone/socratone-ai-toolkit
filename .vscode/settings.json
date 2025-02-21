@@ -1,3 +1,9 @@
 {
-  "pylint.args": ["--disable=E0401", "--disable=W0719", "--disable=C0114"]
+  "pylint.args": [
+    "--disable=E0401",
+    "--disable=W0719",
+    "--disable=C0114",
+    // broad-exception-caught
+    "--disable=W0718"
+  ]
 }
