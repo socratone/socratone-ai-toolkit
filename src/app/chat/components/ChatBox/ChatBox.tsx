@@ -23,6 +23,7 @@ import useSavedMessages from '../../hooks/useSavedMessages';
 import Checkbox from '@/components/Checkbox';
 import HomeIcon from './icons/HomeIcon';
 import Link from 'next/link';
+import Textarea from '@/components/Textarea';
 
 interface ChatBoxProps {
   onOpenMenu: () => void;
@@ -253,21 +254,14 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
           className="hidden absolute bottom-3 right-full mr-3 lg:flex"
         />
         <div className="w-full relative flex-grow">
-          <textarea
+          <Textarea
             {...register('userMessage')}
             ref={(e) => {
               (textareaRef.current as any) = e; // ref 업데이트
               register('userMessage').ref(e); // register을 통한 ref 설정
             }}
             disabled={isLoading}
-            className={classNames(
-              'border rounded-lg p-2 resize-none w-full h-full focus:border-gray-600 focus:outline-none',
-              {
-                'bg-gray-200 cursor-not-allowed border-gray-200 focus:border-gray-200 text-white':
-                  isLoading,
-              },
-              fontSize
-            )}
+            className={fontSize}
             placeholder="Type your message..."
             onKeyDown={handleKeyDown}
             rows={3}
