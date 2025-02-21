@@ -1,3 +1,4 @@
+import { cn } from '@/utils/cn';
 import React, { useState, useRef, useEffect } from 'react';
 
 interface Option {
@@ -9,9 +10,17 @@ interface SelectProps<T> {
   value: T;
   onChange: (value: T) => void;
   options: Option[];
+  fullWidth?: boolean;
+  maxWidth?: number;
 }
 
-const Select = <T,>({ value, onChange, options }: SelectProps<T>) => {
+const Select = <T,>({
+  value,
+  onChange,
+  options,
+  fullWidth,
+  maxWidth,
+}: SelectProps<T>) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -36,7 +45,15 @@ const Select = <T,>({ value, onChange, options }: SelectProps<T>) => {
   }, []);
 
   return (
-    <div className="relative inline-block w-48" ref={dropdownRef}>
+    <div
+      className={cn('relative inline-block w-48', {
+        'w-full': fullWidth,
+      })}
+      style={{
+        maxWidth,
+      }}
+      ref={dropdownRef}
+    >
       <button
         type="button"
         onClick={toggleDropdown}

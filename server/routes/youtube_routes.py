@@ -11,9 +11,13 @@ youtube_blueprint = Blueprint('youtube', __name__)
 def youtube_to_text():
     data = request.json
     url = data.get('url')
+    model = data.get('model')
 
     if not url:
         return jsonify({'error': 'No URL provided'}), 400
+
+    if not model:
+        return jsonify({'error': 'No model provided'}), 400
 
     try:
         video_file_path = download_youtube_video(url)
@@ -26,7 +30,8 @@ def youtube_to_text():
         extract_audio_from_video(video_file_path, audio_file_path)
 
         # 오디오를 텍스트로 변환
-        text = transcribe_audio_with_whisper(audio_file_path)
+        text = transcribe_audio_with_whisper(
+            audio_file_path, model)
 
         return jsonify({'text': text}), 200
     except Exception as e:
