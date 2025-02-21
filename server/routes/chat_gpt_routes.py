@@ -9,7 +9,7 @@ chat_gpt_blueprint = Blueprint("chat_gpt", __name__)
 @chat_gpt_blueprint.route("/chat-gpt", methods=["POST"])
 def chat_gpt():
     data = request.json
-    messages = data.get('messages')
+    messages = data.get("messages")
 
     try:
         content = request_chat_gpt(messages)

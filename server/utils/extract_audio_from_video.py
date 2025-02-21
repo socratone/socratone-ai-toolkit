@@ -10,4 +10,4 @@ def extract_audio_from_video(video_file_path: str, output_audio_path: str) -> No
 
         # 추출한 오디오를 지정된 경로에 파일로 저장합니다.
         # codec='pcm_s16le'는 오디오 코덱을 설정하는 부분으로, 여기서는 PCM 16-bit little-endian 코덱을 사용합니다.
-        audio.write_audiofile(output_audio_path, codec='pcm_s16le')
+        audio.write_audiofile(output_audio_path, codec="pcm_s16le")

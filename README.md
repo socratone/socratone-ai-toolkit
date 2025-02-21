@@ -58,3 +58,10 @@ docker-compose up --build
 ## 사용량 확인
 
 https://platform.openai.com/settings/organization/usage
+
+## 개발 환경
+
+### 파이썬 익스텐션
+
+- [Pylint](https://marketplace.visualstudio.com/items?itemName=ms-python.pylint)
+- [Black Formatter](https://marketplace.visualstudio.com/items?itemName=ms-python.black-formatter)
