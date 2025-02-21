@@ -4,9 +4,7 @@ import ToastContainer from '@/components/ToastContainer';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'SocratoneGPT',
-  description:
-    'SocratoneGPT helps you get answers, find inspiration and be more productive. It is free to use and easy to try. Just ask and SocratoneGPT can help with writing, learning, brainstorming and more.',
+  title: 'Socratone AI Toolkit',
 };
 
 export default function RootLayout({

@@ -11,3 +11,8 @@ export type MessageHistory = {
   date: string;
   title: string;
 };
+
+export type AsrModel =
+  | 'openai/whisper-tiny'
+  | 'openai/whisper-small'
+  | 'openai/whisper-large-v3-turbo';

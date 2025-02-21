@@ -1,5 +1,5 @@
-import classNames from 'classnames';
 import ChevronIcon from './icons/ChevronIcon';
+import { cn } from '@/utils/cn';
 
 interface ScrollButtonProps {
   direction: 'up' | 'down';
@@ -10,14 +10,14 @@ interface ScrollButtonProps {
 const ScrollButton = ({ direction, onClick, className }: ScrollButtonProps) => {
   return (
     <button
-      className={classNames(
+      className={cn(
         'flex justify-center items-center size-10 rounded-full border bg-white shadow',
         className
       )}
       onClick={onClick}
     >
       <div
-        className={classNames('transition-transform duration-300 ', {
+        className={cn('transition-transform duration-300 ', {
           'transform rotate-180': direction === 'up',
           'transform rotate-0': direction === 'down',
         })}

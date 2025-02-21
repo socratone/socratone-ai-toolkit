@@ -1,3 +1,15 @@
 Flask
-PyPDF2
 flask-cors
+
+PyPDF2
+
+pytubefix 
+moviepy==1.0.3
+
+transformers
+
+torch
+
+requests
+
+python-dotenv

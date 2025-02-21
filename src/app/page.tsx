@@ -10,6 +10,9 @@ const Home = () => {
         <Link className="text-center py-1 px-2 font-semibold" href="/pdf">
           Pdf
         </Link>
+        <Link className="text-center py-1 px-2 font-semibold" href="/youtube">
+          Youtube
+        </Link>
       </div>
     </div>
   );
