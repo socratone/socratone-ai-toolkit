@@ -51,7 +51,7 @@ const Pdf = () => {
 
   return (
     <>
-      <div className="flex gap-2 justify-end items-center p-2">
+      <header className="flex gap-2 justify-center items-center p-2">
         {isLoading ? <p>Loading...</p> : file ? <p>{file.name}</p> : null}
         <AnimatedButton onClick={handleButtonClick} size="small">
           <input
@@ -63,7 +63,7 @@ const Pdf = () => {
           />
           파일을 선택해주세요
         </AnimatedButton>
-      </div>
+      </header>
       <div className="px-2 pb-2">
         <p className="whitespace-pre-line">{text}</p>
       </div>

@@ -37,7 +37,7 @@ const Youtube = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="flex justify-center gap-2 p-2">
+      <header className="flex justify-center gap-2 p-2">
         <TextInput
           placeholder="https://www.youtube.com/watch?v=example"
           value={youtubeUrl}
@@ -49,7 +49,7 @@ const Youtube = () => {
         <AnimatedButton size="small" onClick={fetchTextFromYoutube}>
           Transcribe
         </AnimatedButton>
-      </div>
+      </header>
       {isLoading ? <p>Loading...</p> : null}
       {isError ? <p>Error occurred.</p> : null}
       <p className="p-2">{text}</p>
