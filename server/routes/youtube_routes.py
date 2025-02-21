@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from utils.transcribe_audio import transcribe_audio
+from utils.request_chat_gpt import request_chat_gpt
 from utils.download_youtube_video import download_youtube_video
 from utils.extract_audio_from_video import extract_audio_from_video
 import os
@@ -33,6 +34,13 @@ def youtube_to_text():
         text = transcribe_audio(
             audio_file_path, model)
 
-        return jsonify({'text': text}), 200
+        messages = [
+            {"role": "system", "content": "너는 한국말로 답변을 해줘야 해."},
+            {"role": "user", "content": f"다음 텍스트를 요약해줘: {text}"}
+        ]
+
+        summary = request_chat_gpt(messages)
+
+        return jsonify({'original_text': text, 'summary': summary}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500

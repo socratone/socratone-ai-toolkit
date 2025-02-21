@@ -18,6 +18,7 @@ const Youtube = () => {
   const [isError, setIsError] = useState(false);
 
   const [text, setText] = useState('');
+  const [summary, setSummary] = useState('');
 
   // model 값 불러오기
   useEffect(() => {
@@ -42,7 +43,9 @@ const Youtube = () => {
       });
 
       const data = await response.json();
-      setText(data?.text);
+
+      setText(data?.original_text);
+      setSummary(data?.summary);
     } catch (error) {
       setIsError(true);
       console.error('Error:', error);
@@ -85,7 +88,12 @@ const Youtube = () => {
       ) : isError ? (
         <p className="p-2 text-red-500">에러가 발생했습니다.</p>
       ) : text ? (
-        <p className="p-2">{text}</p>
+        <div className="flex flex-col gap-2 p-2">
+          <h2 className="font-bold">요약</h2>
+          <p>{summary}</p>
+          <h2 className="font-bold">내용</h2>
+          <p>{text}</p>
+        </div>
       ) : null}
     </div>
   );

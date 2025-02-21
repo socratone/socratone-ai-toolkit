@@ -8,5 +8,5 @@ services:
     volumes:
       - ./server:/app # 호스트의 ./server 디렉토리를 컨테이너의 /app 디렉토리에 매핑
         # 이를 통해 코드 변경 시 컨테이너를 재시작하지 않고도 변경사항을 반영 가능
-    environment:
-      FLASK_ENV: development # 환경 변수를 설정하여 Flask를 개발 모드로 실행
+    env_file:
+      - .env
