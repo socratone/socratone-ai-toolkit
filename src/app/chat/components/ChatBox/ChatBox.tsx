@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { FontSize } from './types';
 import UserMessage from './UserMessage';
 import AssistantMessage from './AssistantMessage';
-import EllipsisLoader from './EllipsisLoader';
+import EllipsisLoader from '@/components/EllipsisLoader';
 import Select from '@/components/Select';
 import { Message, OpenAiModel } from '@/types';
 import ZoomButton from './ZoomButton';
