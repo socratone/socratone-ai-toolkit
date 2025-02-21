@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import { cn } from '@/utils/cn';
 
 interface UserMessageProps {
   content: string;
@@ -11,7 +11,7 @@ const UserMessage = ({ content, className }: UserMessageProps) => {
       style={{
         wordBreak: 'break-all',
       }}
-      className={classNames(
+      className={cn(
         'p-3 rounded-lg whitespace-pre-wrap bg-blue-50 text-black ml-32 white',
         className
       )}

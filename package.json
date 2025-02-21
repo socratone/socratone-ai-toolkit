@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "classnames": "^2.5.1",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
     "es-toolkit": "^1.29.0",

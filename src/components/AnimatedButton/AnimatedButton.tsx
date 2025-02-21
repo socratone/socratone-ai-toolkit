@@ -1,8 +1,7 @@
-import classNames from 'classnames';
-
 import styles from './AnimatedButton.module.scss';
 import { useLayoutEffect, useRef, useState } from 'react';
 import { throttle } from 'es-toolkit';
+import { cn } from '@/utils/cn';
 
 interface AnimatedButtonProps {
   children: React.ReactNode;
@@ -42,7 +41,7 @@ const AnimatedButton = ({
     <button
       ref={buttonRef}
       disabled={disabled}
-      className={classNames(styles.button, 'rounded-md', {
+      className={cn(styles.button, 'rounded-md', {
         'bg-gray-200 cursor-not-allowed': disabled,
         'px-6 py-4': size === 'medium',
         'px-3 py-2': size === 'small',
