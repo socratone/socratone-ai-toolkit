@@ -2,6 +2,7 @@ from moviepy.editor import VideoFileClip
 
 
 def extract_audio_from_video(video_file_path: str, output_audio_path: str) -> None:
+    """비디오 파일에서 오디오를 추출하는 함수입니다."""
     # VideoFileClip 클래스를 사용하여 비디오 파일을 엽니다.
     # `with` 문은 파일 열기와 닫기를 자동으로 처리해주는 컨텍스트 매니저 역할을 합니다.
     with VideoFileClip(video_file_path) as video:

@@ -8,6 +8,7 @@ chat_gpt_blueprint = Blueprint("chat_gpt", __name__)
 
 @chat_gpt_blueprint.route("/chat-gpt", methods=["POST"])
 def chat_gpt():
+    """chat gpt에 메시지를 전송하는 API입니다."""
     data = request.json
     messages = data.get("messages")
 

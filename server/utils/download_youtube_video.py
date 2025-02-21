@@ -3,6 +3,7 @@ from pytubefix import YouTube
 
 
 def download_youtube_video(url: str, output_path: str = "downloads/") -> str:
+    """유튜브 파일를 다운로드하는 함수입니다."""
     if not url:
         raise ValueError("No URL provided")
 

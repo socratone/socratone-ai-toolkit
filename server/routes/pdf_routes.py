@@ -6,6 +6,7 @@ pdf_blueprint = Blueprint("pdf", __name__)
 
 @pdf_blueprint.route("/text-from-pdf", methods=["POST"])
 def text_from_pdf():
+    """PDF 파일에서 텍스트를 추출하는 API입니다."""
     try:
         # 파일이 요청에 포함되어 있는지 확인
         if "file" not in request.files:

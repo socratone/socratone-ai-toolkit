@@ -10,6 +10,7 @@ youtube_blueprint = Blueprint("youtube", __name__)
 
 @youtube_blueprint.route("/youtube-to-text", methods=["POST"])
 def youtube_to_text():
+    """유튜브를 요약하는 API입니다."""
     data = request.json
     url = data.get("url")
     model = data.get("model")
