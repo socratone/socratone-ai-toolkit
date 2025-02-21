@@ -1,7 +1,7 @@
 from transformers import pipeline
 
 
-def transcribe_audio_with_whisper(audio_file_path: str, model: str) -> str:
+def transcribe_audio(audio_file_path: str, model: str) -> str:
     pipe = pipeline("automatic-speech-recognition",
                     model=model,
                     return_timestamps=True)

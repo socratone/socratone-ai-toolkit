@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from utils.transcribe_audio_with_whisper import transcribe_audio_with_whisper
+from utils.transcribe_audio import transcribe_audio
 from utils.download_youtube_video import download_youtube_video
 from utils.extract_audio_from_video import extract_audio_from_video
 import os
@@ -30,7 +30,7 @@ def youtube_to_text():
         extract_audio_from_video(video_file_path, audio_file_path)
 
         # 오디오를 텍스트로 변환
-        text = transcribe_audio_with_whisper(
+        text = transcribe_audio(
             audio_file_path, model)
 
         return jsonify({'text': text}), 200
