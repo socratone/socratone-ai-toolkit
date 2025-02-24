@@ -32,6 +32,20 @@ const Youtube = () => {
     }
   }, []);
 
+  // 앱이 처음 로드될 때 알림 권한 요청
+  useEffect(() => {
+    if (
+      Notification.permission !== 'granted' &&
+      Notification.permission !== 'denied'
+    ) {
+      Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          console.log('알림 권한이 승인되었습니다.');
+        }
+      });
+    }
+  }, []);
+
   const startTimer = () => {
     setDuration(0);
     timerRef.current = setInterval(() => {
@@ -42,6 +56,12 @@ const Youtube = () => {
   const endTimer = () => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
+    }
+  };
+
+  const showNotification = (message: string) => {
+    if (Notification.permission === 'granted') {
+      new Notification(message);
     }
   };
 
@@ -73,6 +93,7 @@ const Youtube = () => {
     } finally {
       endTimer();
       setIsLoading(false);
+      showNotification('해석이 완료되었습니다!');
     }
   };
 
