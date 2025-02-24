@@ -14,16 +14,12 @@ def youtube_to_text():
     data = request.json
     url = data.get("url")
     model = data.get("model")
-    return_timestamps = data.get("returnTimestamps")
 
     if not url:
         return jsonify({"error": "No URL provided"}), 400
 
     if not model:
         return jsonify({"error": "No model provided"}), 400
-
-    if not return_timestamps:
-        return jsonify({"error": "No return_timestamps provided"}), 400
 
     try:
         # 유튜브 파일 다운로드
@@ -37,7 +33,10 @@ def youtube_to_text():
         extract_audio_from_video(video_file_path, audio_file_path)
 
         # 오디오를 텍스트로 변환
-        text = transcribe_audio(audio_file_path, model, return_timestamps)
+        if model == "facebook/wav2vec2-base-960h":
+            text = transcribe_audio(audio_file_path, model, return_timestamps="char")
+        else:
+            text = transcribe_audio(audio_file_path, model, return_timestamps=True)
 
         messages = [
             {"role": "system", "content": "너는 한국말로 답변을 해줘야 해."},
