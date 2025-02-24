@@ -204,20 +204,6 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
               <HomeIcon />
             </Link>
           </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              checked={devChecked}
-              onCheckedChange={handleDevCheckedChange}
-              label="개발자 모드"
-              className="font-medium"
-            />
-            <ZoomButton value={fontSize} onChange={handleFontSizeChange} />
-            <Select
-              value={selectedModel}
-              onChange={handleModelChange}
-              options={modelOptions}
-            />
-          </div>
         </header>
         <section className="flex flex-col gap-3 w-full p-3">
           {messages.map((msg, index) => {
@@ -252,6 +238,22 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
           onClick={handleScrollButtonClick}
           className="hidden absolute bottom-3 right-full mr-3 lg:flex"
         />
+        <div className="flex items-center gap-2">
+          <Checkbox
+            checked={devChecked}
+            onCheckedChange={handleDevCheckedChange}
+            label="개발자"
+            className="font-medium flex-shrink-0"
+          />
+          <ZoomButton value={fontSize} onChange={handleFontSizeChange} />
+          <Select
+            value={selectedModel}
+            onChange={handleModelChange}
+            options={modelOptions}
+            fullWidth
+            maxWidth={220}
+          />
+        </div>
         <div className="w-full relative flex-grow">
           <Textarea
             {...register('userMessage')}
