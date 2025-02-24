@@ -11,7 +11,7 @@ import { AsrModel } from '@/types';
 
 const Youtube = () => {
   const [selectedModel, setSelectedModel] = useState<AsrModel>(
-    'openai/whisper-tiny'
+    'facebook/wav2vec2-base-960h'
   );
   const [youtubeUrl, setYoutubeUrl] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +43,12 @@ const Youtube = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ url: youtubeUrl, model: selectedModel }),
+        body: JSON.stringify({
+          url: youtubeUrl,
+          model: selectedModel,
+          returnTimestamps:
+            selectedModel === 'facebook/wav2vec2-base-960h' ? 'char' : true,
+        }),
       });
 
       const data = await response.json();
