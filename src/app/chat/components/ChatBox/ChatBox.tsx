@@ -9,7 +9,6 @@ import EllipsisLoader from '@/components/EllipsisLoader';
 import Select from '@/components/Select';
 import { Message, OpenAiModel } from '@/types';
 import ZoomButton from './ZoomButton';
-import MenuIcon from './icons/MenuIcon';
 import ScrollButton from './ScrollButton';
 import { devSystemMessage, modelOptions, systemMessage } from './constants';
 import AnimatedButton from '@/components/AnimatedButton';
@@ -20,9 +19,8 @@ import {
 } from '@/constants';
 import useSavedMessages from '../../hooks/useSavedMessages';
 import Checkbox from '@/components/Checkbox';
-import HomeIcon from './icons/HomeIcon';
-import Link from 'next/link';
 import Textarea from '@/components/Textarea';
+import Header from '@/components/Header';
 
 interface ChatBoxProps {
   onOpenMenu: () => void;
@@ -192,19 +190,7 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
   return (
     <main className="flex flex-col h-screen lg:flex-row mx-auto max-w-[1920px]">
       <div ref={scrollContainerRef} className="flex-grow overflow-y-auto">
-        <header className="flex justify-between gap-1 sticky top-0 bg-white px-3 py-2 border-gray-200 border-b">
-          <div className="flex items-center">
-            <button
-              className="flex justify-center items-center size-10"
-              onClick={onOpenMenu}
-            >
-              <MenuIcon />
-            </button>
-            <Link href="/" className="flex justify-center items-center size-10">
-              <HomeIcon />
-            </Link>
-          </div>
-        </header>
+        <Header onOpenMenu={onOpenMenu} />
         <section className="flex flex-col gap-3 w-full p-3">
           {messages.map((msg, index) => {
             if (msg.role === 'user') {
