@@ -39,7 +39,10 @@ def youtube_to_text():
             text = transcribe_audio(audio_file_path, model, return_timestamps=True)
 
         messages = [
-            {"role": "system", "content": "너는 한국말로 답변을 해줘야 해."},
+            {
+                "role": "system",
+                "content": "너는 한국말로 답변을 해줘야 해. 선생님처럼 쉽고 정확하게 알려줘야 해.",
+            },
             {"role": "user", "content": f"다음 텍스트를 요약해줘: {text}"},
         ]
 
