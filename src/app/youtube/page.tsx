@@ -8,6 +8,7 @@ import TextInput from '@/components/TextInput';
 import { ASR_MODEL_STORAGE_KEY, FLASK_API_URL } from '@/constants';
 import { modelOptions } from './constants';
 import { AsrModel } from '@/types';
+import Header from '@/components/Header';
 
 const Youtube = () => {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -104,27 +105,28 @@ const Youtube = () => {
 
   return (
     <div className="flex flex-col">
-      <header className="flex justify-center gap-2 p-2 flex-wrap border-b">
-        <Select
-          value={selectedModel}
-          options={modelOptions}
-          onChange={handleModelChange}
-          fullWidth
-          maxWidth={300}
-        />
-        <TextInput
-          placeholder="https://www.youtube.com/watch?v=example"
-          value={youtubeUrl}
-          onChange={(e) => setYoutubeUrl(e.target.value)}
-          fullWidth
-          maxWidth={500}
-          autoFocus
-        />
-        <AnimatedButton size="small" onClick={fetchTextFromYoutube}>
-          Transcribe
-        </AnimatedButton>
-      </header>
+      <Header isHome />
       <div className="flex flex-col gap-2 p-2">
+        <div className="flex justify-center gap-2 flex-wrap">
+          <Select
+            value={selectedModel}
+            options={modelOptions}
+            onChange={handleModelChange}
+            fullWidth
+            maxWidth={300}
+          />
+          <TextInput
+            placeholder="https://www.youtube.com/watch?v=example"
+            value={youtubeUrl}
+            onChange={(e) => setYoutubeUrl(e.target.value)}
+            fullWidth
+            maxWidth={500}
+            autoFocus
+          />
+          <AnimatedButton size="small" onClick={fetchTextFromYoutube}>
+            Transcribe
+          </AnimatedButton>
+        </div>
         {duration !== 0 && <p>걸린 시간: {duration}초</p>}
         {isLoading ? (
           <div className="mx-auto">

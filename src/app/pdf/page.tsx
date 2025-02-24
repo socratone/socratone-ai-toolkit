@@ -3,6 +3,7 @@
 import { useRef, useState } from 'react';
 import AnimatedButton from '@/components/AnimatedButton';
 import { FLASK_API_URL } from '@/constants';
+import Header from '@/components/Header';
 
 const Pdf = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -51,20 +52,21 @@ const Pdf = () => {
 
   return (
     <>
-      <header className="flex gap-2 justify-center items-center p-2">
-        {isLoading ? <p>Loading...</p> : file ? <p>{file.name}</p> : null}
-        <AnimatedButton onClick={handleButtonClick} size="small">
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="application/pdf"
-            className="hidden"
-            onChange={handleFileChange}
-          />
-          파일을 선택해주세요
-        </AnimatedButton>
-      </header>
-      <div className="px-2 pb-2">
+      <Header isHome />
+      <div className="p-2">
+        <div className="flex gap-2 justify-center items-center">
+          {isLoading ? <p>Loading...</p> : file ? <p>{file.name}</p> : null}
+          <AnimatedButton onClick={handleButtonClick} size="small">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="application/pdf"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+            파일을 선택해주세요
+          </AnimatedButton>
+        </div>
         <p className="whitespace-pre-line">{text}</p>
       </div>
     </>
