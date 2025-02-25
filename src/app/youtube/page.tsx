@@ -66,6 +66,11 @@ const Youtube = () => {
     }
   };
 
+  const playSound = (url: string) => {
+    const audio = new Audio(url);
+    audio.play();
+  };
+
   const fetchTextFromYoutube = async () => {
     startTimer();
     setIsLoading(true);
@@ -89,9 +94,11 @@ const Youtube = () => {
       setText(data?.original_text);
       setSummary(data?.summary);
       showNotification('해석이 완료되었습니다!');
+      playSound('/sounds/success.mp3');
     } catch (error) {
       setIsError(true);
       showNotification('해석이 실패되었습니다!');
+      playSound('/sounds/error.mp3');
       console.error('Error:', error);
     } finally {
       endTimer();
