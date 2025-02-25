@@ -88,13 +88,14 @@ const Youtube = () => {
 
       setText(data?.original_text);
       setSummary(data?.summary);
+      showNotification('해석이 완료되었습니다!');
     } catch (error) {
       setIsError(true);
+      showNotification('해석이 실패되었습니다!');
       console.error('Error:', error);
     } finally {
       endTimer();
       setIsLoading(false);
-      showNotification('해석이 완료되었습니다!');
     }
   };
 
