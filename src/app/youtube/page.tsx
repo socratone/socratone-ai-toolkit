@@ -25,6 +25,8 @@ const Youtube = () => {
 
   const [duration, setDuration] = useState(0);
 
+  const [translatedText, setTranslatedText] = useState('');
+
   // model 값 불러오기
   useEffect(() => {
     const savedModel = localStorage.getItem(ASR_MODEL_STORAGE_KEY);
@@ -111,6 +113,39 @@ const Youtube = () => {
     setSelectedModel(selectedModel as AsrModel);
   };
 
+  const handleTranslate = async () => {
+    setIsLoading(true);
+    setIsError(false);
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [
+            {
+              role: 'system',
+              content: '너는 영어를 한국어로 번역하는 전문가야.',
+            },
+            {
+              role: 'user',
+              content: `다음 문장을 한국어로 번역해줘. ${text}`,
+            },
+          ],
+          model: 'gpt-4o-mini',
+        }),
+      });
+
+      const translatedText = await response.text();
+      setTranslatedText(translatedText);
+    } catch (error) {
+      setIsError(true);
+      console.error('Error:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="flex flex-col">
       <Header isHome />
@@ -138,16 +173,29 @@ const Youtube = () => {
         {duration !== 0 && (
           <p className="text-center">걸린 시간: {duration}초</p>
         )}
-        {isLoading ? (
+        {isLoading && (
           <div className="mx-auto">
             <EllipsisLoader />
           </div>
-        ) : isError ? (
+        )}
+        {isError && (
           <p className="text-red-500 text-center">에러가 발생했습니다.</p>
-        ) : text ? (
+        )}
+        {!!text ? (
           <>
             <h2 className="font-bold">요약</h2>
             <p>{summary}</p>
+            {!!translatedText && (
+              <>
+                <h2 className="font-bold">번역된 내용</h2>
+                <p>{translatedText}</p>
+              </>
+            )}
+            <div>
+              <AnimatedButton size="small" onClick={handleTranslate}>
+                영어를 한국어로 번역
+              </AnimatedButton>
+            </div>
             <h2 className="font-bold">내용</h2>
             <p>{text}</p>
           </>
