@@ -135,13 +135,15 @@ const Youtube = () => {
             Transcribe
           </AnimatedButton>
         </div>
-        {duration !== 0 && <p>걸린 시간: {duration}초</p>}
+        {duration !== 0 && (
+          <p className="text-center">걸린 시간: {duration}초</p>
+        )}
         {isLoading ? (
           <div className="mx-auto">
             <EllipsisLoader />
           </div>
         ) : isError ? (
-          <p className="p-2 text-red-500">에러가 발생했습니다.</p>
+          <p className="text-red-500 text-center">에러가 발생했습니다.</p>
         ) : text ? (
           <>
             <h2 className="font-bold">요약</h2>
