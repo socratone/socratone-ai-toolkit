@@ -9,6 +9,7 @@ import { ASR_MODEL_STORAGE_KEY, FLASK_API_URL } from '@/constants';
 import { modelOptions } from './constants';
 import { AsrModel } from '@/types';
 import Header from '@/components/Header';
+import useChat from '@/hooks/useChat';
 
 const Youtube = () => {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -26,6 +27,10 @@ const Youtube = () => {
   const [duration, setDuration] = useState(0);
 
   const [translatedText, setTranslatedText] = useState('');
+
+  const { sendMessage } = useChat({
+    onMessageReceived: (chunk) => setTranslatedText((prev) => prev + chunk),
+  });
 
   // model 값 불러오기
   useEffect(() => {
@@ -113,37 +118,17 @@ const Youtube = () => {
     setSelectedModel(selectedModel as AsrModel);
   };
 
-  const handleTranslate = async () => {
-    setIsLoading(true);
-    setIsError(false);
-
-    try {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: [
-            {
-              role: 'system',
-              content: '너는 영어를 한국어로 번역하는 전문가야.',
-            },
-            {
-              role: 'user',
-              content: `다음 문장을 한국어로 번역해줘. ${text}`,
-            },
-          ],
-          model: 'gpt-4o-mini',
-        }),
-      });
-
-      const translatedText = await response.text();
-      setTranslatedText(translatedText);
-    } catch (error) {
-      setIsError(true);
-      console.error('Error:', error);
-    } finally {
-      setIsLoading(false);
-    }
+  const handleTranslate = () => {
+    sendMessage([
+      {
+        role: 'system',
+        content: '너는 영어를 한국어로 번역하는 전문가야.',
+      },
+      {
+        role: 'user',
+        content: `다음 문장을 한국어로 번역해줘. ${text}`,
+      },
+    ]);
   };
 
   return (
