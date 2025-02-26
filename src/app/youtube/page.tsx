@@ -28,7 +28,7 @@ const Youtube = () => {
 
   const [translatedText, setTranslatedText] = useState('');
 
-  const { sendMessage } = useChat({
+  const { sendMessage, isError: isMessageError } = useChat({
     onMessageReceived: (chunk) => setTranslatedText((prev) => prev + chunk),
   });
 
@@ -163,9 +163,9 @@ const Youtube = () => {
             <EllipsisLoader />
           </div>
         )}
-        {isError && (
+        {isError || isMessageError ? (
           <p className="text-red-500 text-center">에러가 발생했습니다.</p>
-        )}
+        ) : null}
         {!!text ? (
           <>
             <h2 className="font-bold">요약</h2>
