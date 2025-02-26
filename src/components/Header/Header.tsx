@@ -10,7 +10,7 @@ interface HeaderProps {
 
 const Header = ({ onOpenMenu, isMenu, isHome }: HeaderProps) => {
   return (
-    <header className="flex justify-between gap-1 sticky top-0 bg-white px-3 py-2 border-gray-200 border-b">
+    <header className="flex justify-between gap-1 sticky top-0 bg-white px-3 py-2 border-gray-200 border-b z-30">
       <nav className="flex items-center">
         {isMenu && onOpenMenu ? (
           <button
