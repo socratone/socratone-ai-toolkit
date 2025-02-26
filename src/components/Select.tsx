@@ -78,7 +78,9 @@ const Select = <T,>({
                 onChange(option.value as T);
                 setIsOpen(false);
               }}
-              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+              className={cn('px-4 py-2 hover:bg-gray-100 cursor-pointer', {
+                'bg-blue-50': option.value === value,
+              })}
             >
               {option.label}
             </li>
