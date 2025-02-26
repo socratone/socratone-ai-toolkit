@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 interface ChatParams {
   onMessageReceived: (text: string) => void;
+  model?: string;
 }
 
 interface Message {
@@ -9,7 +10,7 @@ interface Message {
   content: string;
 }
 
-const useChat = ({ onMessageReceived }: ChatParams) => {
+const useChat = ({ onMessageReceived, model = 'gpt-4o-mini' }: ChatParams) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
@@ -26,7 +27,7 @@ const useChat = ({ onMessageReceived }: ChatParams) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           messages,
-          model: 'gpt-4o-mini',
+          model,
           stream: true,
         }),
         signal,
