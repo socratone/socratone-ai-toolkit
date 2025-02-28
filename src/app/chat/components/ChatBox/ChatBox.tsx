@@ -27,6 +27,8 @@ interface ChatBoxProps {
 }
 
 const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
+  const asideRef = useRef<HTMLElement>(null);
+
   const { currentMessageKey, messagesByDateTime, saveMessages } =
     useSavedMessages();
 
@@ -43,6 +45,41 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // aside 너비 상태 (기본값: lg:w-96와 동일한 384px)
+  const [asideWidth, setAsideWidth] = useState(384);
+  const [isResizing, setIsResizing] = useState(false);
+
+  // 리사이징 이벤트 핸들러
+  useEffect(() => {
+    // 마우스 이동 시 aside 너비 계산
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isResizing) return;
+
+      // 현재 마우스 X 위치를 기준으로 새로운 너비 계산
+      const newWidth = window.innerWidth - e.clientX;
+      // 사용성을 위해 너비를 300px ~ 600px 사이로 제한
+      const clampedWidth = Math.min(Math.max(newWidth, 300), 600);
+      setAsideWidth(clampedWidth);
+    };
+
+    // 마우스 버튼을 놓으면 리사이징 종료
+    const handleMouseUp = () => {
+      setIsResizing(false);
+    };
+
+    // 리사이징 중일 때만 이벤트 리스너 등록
+    if (isResizing) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    }
+
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isResizing]);
 
   // 키에 해당하는 messages 초기화
   useEffect(() => {
@@ -218,7 +255,16 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
           </div>
         ) : null}
       </div>
-      <aside className="relative flex flex-col gap-2 p-3 border-t flex-shrink-0 lg:border-t-0 lg:border-l lg:w-96">
+      <aside
+        ref={asideRef}
+        style={{ width: asideWidth }}
+        className="relative flex flex-col gap-2 p-3 border-t flex-shrink-0 lg:border-t-0 lg:border-l"
+      >
+        {/* 리사이징을 위한 드래그 핸들 */}
+        <div
+          className="absolute left-0 top-0 w-[7px] h-full cursor-col-resize hover:bg-gray-200 transition-colors"
+          onMouseDown={() => setIsResizing(true)}
+        />
         <ScrollButton
           direction="down"
           onClick={handleScrollButtonClick}
