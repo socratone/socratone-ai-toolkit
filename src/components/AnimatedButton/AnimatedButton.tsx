@@ -1,6 +1,5 @@
 import styles from './AnimatedButton.module.scss';
 import { useLayoutEffect, useRef, useState } from 'react';
-import { throttle } from 'es-toolkit';
 import { cn } from '@/utils/cn';
 
 interface AnimatedButtonProps {
@@ -10,6 +9,13 @@ interface AnimatedButtonProps {
   size?: 'small' | 'medium';
 }
 
+/**
+ * 애니메이션 효과가 있는 버튼 컴포넌트
+ * @param children - 버튼 내부에 표시될 컨텐츠
+ * @param onClick - 클릭 이벤트 핸들러
+ * @param disabled - 버튼 비활성화 여부
+ * @param size - 버튼 크기 ('small' | 'medium')
+ */
 const AnimatedButton = ({
   children,
   onClick,
@@ -17,6 +23,8 @@ const AnimatedButton = ({
   size = 'medium',
 }: AnimatedButtonProps) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const observerRef = useRef<ResizeObserver | null>(null);
+
   const [backgroundSize, setBackgroundSize] = useState<number | null>(null);
 
   useLayoutEffect(() => {
@@ -26,14 +34,16 @@ const AnimatedButton = ({
       }
     };
 
-    const throttledUpdateBackgroundSize = throttle(updateBackgroundSize, 100);
+    observerRef.current = new ResizeObserver(updateBackgroundSize);
+
+    if (buttonRef.current) {
+      observerRef.current.observe(buttonRef.current);
+    }
 
     updateBackgroundSize();
-    window.addEventListener('resize', throttledUpdateBackgroundSize);
 
     return () => {
-      window.removeEventListener('resize', throttledUpdateBackgroundSize);
-      throttledUpdateBackgroundSize.cancel(); // Cancel any pending throttled calls
+      observerRef.current?.disconnect();
     };
   }, []);
 
