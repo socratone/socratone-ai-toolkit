@@ -16,6 +16,7 @@ import {
   DEV_CHECKED_STORAGE_KEY,
   FONT_SIZE_STORAGE_KEY,
   MODEL_STORAGE_KEY,
+  ASIDE_WIDTH_STORAGE_KEY,
 } from '@/constants';
 import useSavedMessages from '../../hooks/useSavedMessages';
 import Checkbox from '@/components/Checkbox';
@@ -50,6 +51,14 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
   const [asideWidth, setAsideWidth] = useState(384);
   const [isResizing, setIsResizing] = useState(false);
 
+  // asideWidth 값 불러오기
+  useEffect(() => {
+    const savedWidth = localStorage.getItem(ASIDE_WIDTH_STORAGE_KEY);
+    if (savedWidth) {
+      setAsideWidth(Number(savedWidth));
+    }
+  }, []);
+
   // 리사이징 이벤트 핸들러
   useEffect(() => {
     // 마우스 이동 시 aside 너비 계산
@@ -61,6 +70,8 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
       // 사용성을 위해 너비를 300px ~ 600px 사이로 제한
       const clampedWidth = Math.min(Math.max(newWidth, 300), 600);
       setAsideWidth(clampedWidth);
+      // 로컬 스토리지에 너비 저장
+      localStorage.setItem(ASIDE_WIDTH_STORAGE_KEY, clampedWidth.toString());
     };
 
     // 마우스 버튼을 놓으면 리사이징 종료
