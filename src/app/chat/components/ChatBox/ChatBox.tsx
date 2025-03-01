@@ -288,7 +288,7 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
       >
         {/* 리사이징을 위한 드래그 핸들 */}
         <div
-          className="absolute left-0 top-0 w-[7px] h-full cursor-col-resize hover:bg-gray-200 transition-colors"
+          className="absolute z-50 left-[-2px] top-0 w-[4px] h-full cursor-col-resize hover:bg-blue-300 active:bg-blue-300 transition-colors"
           onMouseDown={() => setIsResizing(true)}
         />
         <ScrollButton
