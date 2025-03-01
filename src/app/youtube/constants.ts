@@ -2,10 +2,6 @@ import { AsrModel } from '@/types';
 
 export const modelOptions: { value: AsrModel; label: string }[] = [
   {
-    value: 'facebook/wav2vec2-base-960h',
-    label: 'facebook/wav2vec2-base-960h',
-  },
-  {
     value: 'openai/whisper-tiny',
     label: 'openai/whisper-tiny',
   },

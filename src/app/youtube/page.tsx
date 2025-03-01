@@ -15,7 +15,7 @@ const Youtube = () => {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const [selectedModel, setSelectedModel] = useState<AsrModel>(
-    'facebook/wav2vec2-base-960h'
+    'openai/whisper-tiny'
   );
   const [youtubeUrl, setYoutubeUrl] = useState('');
   const [isLoading, setIsLoading] = useState(false);

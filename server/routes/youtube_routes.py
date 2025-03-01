@@ -33,10 +33,7 @@ def youtube_to_text():
         extract_audio_from_video(video_file_path, audio_file_path)
 
         # 오디오를 텍스트로 변환
-        if model == "facebook/wav2vec2-base-960h":
-            text = transcribe_audio(audio_file_path, model, return_timestamps="char")
-        else:
-            text = transcribe_audio(audio_file_path, model, return_timestamps=True)
+        text = transcribe_audio(audio_file_path, model, return_timestamps=True)
 
         messages = [
             {

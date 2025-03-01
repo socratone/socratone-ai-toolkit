@@ -13,7 +13,6 @@ export type MessageHistory = {
 };
 
 export type AsrModel =
-  | 'facebook/wav2vec2-base-960h'
   | 'openai/whisper-tiny'
   | 'openai/whisper-small'
   | 'openai/whisper-large-v3-turbo';
