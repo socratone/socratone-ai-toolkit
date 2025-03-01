@@ -30,8 +30,12 @@ interface ChatBoxProps {
 const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
   const asideRef = useRef<HTMLElement>(null);
 
-  const { currentMessageKey, messagesByDateTime, saveMessages } =
-    useSavedMessages();
+  const {
+    currentMessageKey,
+    messagesByDateTime,
+    saveMessages,
+    updateNewCurrentMessageKey,
+  } = useSavedMessages();
 
   const { register, handleSubmit, reset } = useForm<{ userMessage: string }>({
     defaultValues: { userMessage: '' },
@@ -235,10 +239,21 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
     });
   };
 
+  const handleNewClick = () => {
+    updateNewCurrentMessageKey();
+  };
+
   return (
     <main className="flex flex-col h-screen lg:flex-row">
       <div ref={scrollContainerRef} className="flex-grow overflow-y-auto">
-        <Header isMenu onOpenMenu={onOpenMenu} />
+        <Header isMenu onOpenMenu={onOpenMenu}>
+          <button
+            className="min-h-8 px-2 block items-center text-lg w-full text-start font-semibold"
+            onClick={handleNewClick}
+          >
+            새로운 채팅
+          </button>
+        </Header>
         <section className="flex flex-col gap-3 w-full p-3">
           {messages.map((msg, index) => {
             if (msg.role === 'user') {

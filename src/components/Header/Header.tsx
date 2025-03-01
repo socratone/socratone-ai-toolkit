@@ -6,9 +6,10 @@ interface HeaderProps {
   onOpenMenu?: () => void;
   isMenu?: boolean;
   isHome?: boolean;
+  children?: React.ReactNode;
 }
 
-const Header = ({ onOpenMenu, isMenu, isHome }: HeaderProps) => {
+const Header = ({ onOpenMenu, isMenu, isHome, children }: HeaderProps) => {
   return (
     <header className="flex justify-between gap-1 sticky top-0 bg-white px-3 py-2 border-gray-200 border-b z-30">
       <nav className="flex items-center">
@@ -35,6 +36,7 @@ const Header = ({ onOpenMenu, isMenu, isHome }: HeaderProps) => {
           Youtube
         </Link>
       </nav>
+      {children ? <div className="flex items-center">{children}</div> : null}
     </header>
   );
 };

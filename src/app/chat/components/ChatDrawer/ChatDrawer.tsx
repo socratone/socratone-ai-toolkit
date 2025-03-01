@@ -20,11 +20,7 @@ const ChatDrawer = ({ open, onClose }: ChatDrawerProps) => {
     []
   );
 
-  const {
-    updateCurrentMessageKey,
-    updateNewCurrentMessageKey,
-    deleteMessages,
-  } = useSavedMessages();
+  const { updateCurrentMessageKey, deleteMessages } = useSavedMessages();
 
   // messageHistories 초기화
   useEffect(() => {
@@ -69,11 +65,6 @@ const ChatDrawer = ({ open, onClose }: ChatDrawerProps) => {
     }
   }, [open]);
 
-  const handleNewClick = () => {
-    updateNewCurrentMessageKey();
-    onClose();
-  };
-
   const handleMessageHistoryClick = (date: string) => {
     updateCurrentMessageKey(date);
   };
@@ -94,12 +85,6 @@ const ChatDrawer = ({ open, onClose }: ChatDrawerProps) => {
             onClick={onClose}
           >
             <CloseIcon />
-          </button>
-          <button
-            className="min-h-8 px-2 block items-center text-lg w-full text-start"
-            onClick={handleNewClick}
-          >
-            새로운 채팅
           </button>
         </header>
 
