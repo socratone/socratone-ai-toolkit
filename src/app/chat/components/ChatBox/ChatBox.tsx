@@ -236,7 +236,7 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
   };
 
   return (
-    <main className="flex flex-col h-screen lg:flex-row mx-auto max-w-[1920px]">
+    <main className="flex flex-col h-screen lg:flex-row">
       <div ref={scrollContainerRef} className="flex-grow overflow-y-auto">
         <Header isMenu onOpenMenu={onOpenMenu} />
         <section className="flex flex-col gap-3 w-full p-3">
