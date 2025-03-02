@@ -122,11 +122,11 @@ const Youtube = () => {
     sendMessage([
       {
         role: 'system',
-        content: '너는 영어를 한국어로 번역하는 전문가야.',
+        content: '너는 유튜브 영어 자막을 한국어로 번역하는 전문가야.',
       },
       {
         role: 'user',
-        content: `다음 문장을 한국어로 번역해줘. ${text}`,
+        content: `다음을 한국어로 번역해서 번역한 내용만 결과로 보여줘. ${text}`,
       },
     ]);
   };
