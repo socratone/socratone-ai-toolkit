@@ -7,6 +7,9 @@ const Home = () => {
         <Link className="text-center py-1 px-2 font-semibold" href="/chat">
           Chat
         </Link>
+        <Link className="text-center py-1 px-2 font-semibold" href="/image">
+          Image
+        </Link>
         <Link className="text-center py-1 px-2 font-semibold" href="/pdf">
           Pdf
         </Link>

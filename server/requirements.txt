@@ -13,3 +13,6 @@ torch
 requests
 
 python-dotenv
+
+Pillow # 이미지 처리 라이브러리
+pytesseract # OCR 엔진

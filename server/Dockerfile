@@ -1,9 +1,9 @@
 # 베이스 이미지로 Python 3.9 사용
 FROM python:3.9
 
-# 시스템 패키지 업데이트 및 FLAC, FFmpeg 유틸리티 설치
+# 시스템 패키지 업데이트 및 FLAC, FFmpeg, Tesseract OCR 유틸리티 설치
 RUN apt-get update && \
-    apt-get install -y flac ffmpeg && \
+    apt-get install -y flac ffmpeg tesseract-ocr tesseract-ocr-kor && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
