@@ -1,5 +1,6 @@
 import os
 from flask import Blueprint, request, jsonify
+from utils.delete_file import delete_file
 from utils.transcribe_audio import transcribe_audio
 from utils.request_chat_gpt import request_chat_gpt
 from utils.download_youtube_video import download_youtube_video
@@ -34,6 +35,9 @@ def youtube_to_text():
 
         # 오디오를 텍스트로 변환
         text = transcribe_audio(audio_file_path, model, return_timestamps=True)
+
+        # 파일 삭제
+        delete_file([video_file_path, audio_file_path])
 
         messages = [
             {
