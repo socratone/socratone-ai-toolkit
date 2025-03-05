@@ -162,6 +162,11 @@ const Youtube = () => {
             placeholder="https://www.youtube.com/watch?v=example"
             value={youtubeUrl}
             onChange={(e) => setYoutubeUrl(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                fetchTextFromYoutube();
+              }
+            }}
             fullWidth
             maxWidth={500}
             autoFocus
