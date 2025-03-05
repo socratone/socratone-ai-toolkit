@@ -1,7 +1,7 @@
-import Markdown from './Markdown';
 import Image from 'next/image';
 import aiImage from './images/ai-512x512.png';
 import { cn } from '@/utils/cn';
+import Markdown from '@/components/Markdown';
 
 interface AssistantMessageProps {
   content: string;

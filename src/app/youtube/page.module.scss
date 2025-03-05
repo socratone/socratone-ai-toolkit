@@ -1,0 +1,16 @@
+.markdown {
+  white-space: pre-line;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  section {
+    display: flex;
+    flex-direction: column;
+  }
+
+  h2 {
+    font-weight: 700;
+    font-size: 16px;
+  }
+}

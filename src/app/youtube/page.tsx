@@ -10,6 +10,7 @@ import { modelOptions } from './constants';
 import { AsrModel } from '@/types';
 import Header from '@/components/Header';
 import useChat from '@/hooks/useChat';
+import styles from './page.module.scss';
 
 const Youtube = () => {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -118,17 +119,37 @@ const Youtube = () => {
     setSelectedModel(selectedModel as AsrModel);
   };
 
-  const handleTranslate = () => {
-    sendMessage([
+  const getTranslatedMessages = (text: string) => {
+    return [
       {
-        role: 'system',
+        role: 'system' as const,
         content: '너는 유튜브 영어 자막을 한국어로 번역하는 전문가야.',
       },
       {
-        role: 'user',
-        content: `다음을 한국어로 번역해서 번역한 내용만 결과로 보여줘. ${text}`,
+        role: 'user' as const,
+        content: `${text}
+          
+위 자막을 한국어로 번역해줘. 다음과 같이 원문과 각 문장이 대응하도록 출력해줘. 
+
+<p>Time flies like an arrow.</p>
+<p>시간은 화살과 같이 날아간다.</p>
+
+유사한 내용으로 묶어서 section 태그로 나누고 섹션 앞에 h2 태그로 내용에 맞는 제목을 넣어줘.
+아래와 같은 형태가 될거야.
+
+<section>
+  <h2>제목1</h2>
+  <p>문장1</p>
+  <p>문장2</p>
+  <p>...</p>
+</section>
+<p>...</p>`,
       },
-    ]);
+    ];
+  };
+
+  const handleTranslate = () => {
+    sendMessage(getTranslatedMessages(text));
   };
 
   return (
@@ -168,12 +189,17 @@ const Youtube = () => {
         ) : null}
         {!!text ? (
           <>
-            <h2 className="font-bold">요약</h2>
+            <h2 className="font-bold text-xl">요약</h2>
             <p>{summary}</p>
             {!!translatedText && (
               <>
-                <h2 className="font-bold">번역된 내용</h2>
-                <p>{translatedText}</p>
+                <h2 className="font-bold text-xl">번역된 내용</h2>
+                <div
+                  className={styles.markdown}
+                  dangerouslySetInnerHTML={{
+                    __html: translatedText,
+                  }}
+                />
               </>
             )}
             <div>
@@ -181,7 +207,7 @@ const Youtube = () => {
                 영어를 한국어로 번역
               </AnimatedButton>
             </div>
-            <h2 className="font-bold">내용</h2>
+            <h2 className="font-bold text-xl">내용</h2>
             <p>{text}</p>
           </>
         ) : null}
