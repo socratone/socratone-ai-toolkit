@@ -70,7 +70,16 @@ const Youtube = () => {
 
   const showNotification = (message: string) => {
     if (Notification.permission === 'granted') {
-      new Notification(message);
+      const notification = new Notification(message, {
+        // 아이콘 추가 (권장 크기: 192x192 픽셀)
+        icon: '/images/notification-icon.png',
+      });
+
+      // 알림 클릭 시 현재 앱의 탭으로 포커스 이동
+      notification.onclick = () => {
+        window.focus();
+        notification.close();
+      };
     }
   };
 
