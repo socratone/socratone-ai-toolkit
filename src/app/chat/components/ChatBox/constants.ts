@@ -18,6 +18,10 @@ export const systemMessage = {
 
 export const modelOptions: { value: OpenAiModel; label: string }[] = [
   {
+    label: 'deepseek-chat',
+    value: 'deepseek-chat',
+  },
+  {
     label: 'gpt-4o',
     value: 'gpt-4o',
   },
