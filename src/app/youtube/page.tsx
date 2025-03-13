@@ -11,6 +11,7 @@ import { AsrModel } from '@/types';
 import Header from '@/components/Header';
 import useChat from '@/hooks/useChat';
 import styles from './page.module.scss';
+import Markdown from '@/components/Markdown';
 
 const Youtube = () => {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -198,7 +199,9 @@ const Youtube = () => {
         {!!text ? (
           <>
             <h2 className="font-bold text-xl">요약</h2>
-            <p>{summary}</p>
+            <div className="p-3 rounded-lg border overflow-x-auto">
+              <Markdown content={summary} />
+            </div>
             {!!translatedText && (
               <>
                 <h2 className="font-bold text-xl">번역된 내용</h2>
@@ -216,7 +219,9 @@ const Youtube = () => {
               </AnimatedButton>
             </div>
             <h2 className="font-bold text-xl">내용</h2>
-            <p>{text}</p>
+            <div className="p-3 rounded-lg border overflow-x-auto">
+              <p>{text}</p>
+            </div>
           </>
         ) : null}
       </div>
