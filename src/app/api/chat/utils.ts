@@ -49,6 +49,53 @@ const parseOllamaStreamChunk = (chunk: string): any[] => {
     .filter(Boolean); // null 값을 필터링하여 반환
 };
 
+/**
+ * DeepSeek 모델에서 비스트리밍 방식으로 채팅 응답을 받는 함수
+ * @param messages - 사용자와 AI 간의 대화 메시지 배열
+ * @returns 모델의 응답 텍스트
+ * TODO: 아직 사용하고 있지 않음
+ */
+export const chatFromDeepSeek = async (
+  messages: Message[]
+): Promise<string> => {
+  // API 요청 본문 구성 (stream: false로 설정하여 비스트리밍 방식 사용)
+  const apiRequestBody = {
+    model: 'deepseek-r1:7b',
+    prompt: messages.map((msg) => `${msg.role}: ${msg.content}`).join('\n'), // 메시지 배열을 텍스트로 변환
+    stream: false, // 스트리밍 비활성화
+  };
+
+  try {
+    // Ollama API에 POST 요청 전송
+    const response = await fetch('http://localhost:11434/api/generate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(apiRequestBody),
+    });
+
+    // 응답이 성공적이지 않은 경우 에러 처리
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'DeepSeek API 요청 실패');
+    }
+
+    // JSON 응답 파싱
+    const data = await response.json();
+
+    // Ollama API는 response 필드에 텍스트를 직접 반환
+    return data.response || '';
+  } catch (error) {
+    console.error('DeepSeek 모델 호출 중 오류 발생:', error);
+    throw new Error(
+      `DeepSeek API 호출 실패: ${
+        error instanceof Error ? error.message : String(error)
+      }`
+    );
+  }
+};
+
 export const streamChatFromDeepSeek = async (messages: Message[]) => {
   const apiRequestBody = {
     model: 'deepseek-r1:7b',
