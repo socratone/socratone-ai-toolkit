@@ -2,17 +2,26 @@
 
 AI를 이용한 도구 모음 웹 어플리케이션
 
-[chatgpt.com](https://chatgpt.com) 대신 사용하기 위해 작성했습니다.\
 .env에 키를 넣고 로컬에서 사용합니다.
 
 ![스크린샷](docs/screen-shot.png)
 
-다음과 같은 장점이 있습니다.
+## 사용 가능 AI 모델
 
-- 쓴 만큼만 비용을 낼 수 있다.
-- system role의 message를 설정할 수 있다. (현재는 개발자로 설정)
+- OpenAI
+- Deepseek
+- ExaOne
 
 ## 실행 방법
+
+### Prerequisites
+
+아래 앱 설치가 필요합니다.
+
+- [Docker](https://www.docker.com) 설치
+- [Ollama](https://ollama.com) 설치
+  - `deepseek-r1:7b`
+  - `exaone3.5:latest`
 
 ### Env
 
@@ -43,15 +52,7 @@ pnpm start
 
 http://localhost:4000
 
-## 서버 실행 방법
-
-도커가 설치돼 있어야 한다.
-
-```
-docker-compose up --build
-```
-
-## 사용량 확인
+## Open AI 토큰 사용량 확인
 
 https://platform.openai.com/settings/organization/usage
 
