@@ -223,3 +223,72 @@ export const streamChatFromOpenAi = async (
     },
   });
 };
+
+/**
+ * ExaOne 모델에서 스트리밍 방식으로 채팅 응답을 받는 함수
+ * @param messages - 사용자와 AI 간의 대화 메시지 배열
+ * @returns 스트리밍 응답을 처리하는 ReadableStream
+ */
+export const streamChatFromExaOne = async (messages: Message[]) => {
+  // API 요청 본문 구성 (stream: true로 설정하여 스트리밍 방식 사용)
+  const apiRequestBody = {
+    model: 'exaone3.5:latest', // ExaOne 모델 지정
+    prompt: messages.map((msg) => `${msg.role}: ${msg.content}`).join('\n'), // 메시지 배열을 텍스트로 변환
+    stream: true, // 스트리밍 활성화
+  };
+
+  // Ollama API에 POST 요청 전송
+  const response = await fetch('http://localhost:11434/api/generate', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(apiRequestBody),
+  });
+
+  // 응답이 성공적이지 않은 경우 에러 처리
+  if (!response.ok) {
+    const errorData = await response.text();
+    throw new Error(`ExaOne API 요청 실패: ${errorData}`);
+  }
+
+  // ReadableStream을 반환하여 스트리밍 응답 처리
+  return new ReadableStream({
+    // 스트림이 시작될 때 실행되는 함수
+    async start(controller) {
+      if (!response.body) {
+        throw new Error('response.body is null.');
+      }
+
+      // ReadableStreamDefaultReader를 생성하여 스트림 데이터를 읽기 위한 준비
+      const reader = response.body.getReader();
+      // 바이트 데이터를 문자열로 변환하기 위한 TextDecoder 생성
+      const decoder = new TextDecoder();
+
+      // 스트림 데이터를 반복적으로 읽는 루프
+      while (true) {
+        // reader.read()를 호출하여 스트림에서 데이터를 읽음
+        const { done, value } = await reader.read();
+        // 스트림 끝에 도달하면 반복 종료
+        if (done) break;
+
+        // 읽은 바이트 데이터를 문자열로 디코딩
+        const chunk = decoder.decode(value, { stream: true });
+
+        // 청크 데이터를 파싱하고 메시지를 스트림에 추가
+        const parsedMessages = parseOllamaStreamChunk(chunk);
+
+        parsedMessages.forEach((message) => {
+          // Ollama API는 response 필드에 텍스트를 직접 반환합니다
+          const content = message?.response;
+          if (content) {
+            controller.enqueue(content); // 유효한 경우에만 enqueue
+          }
+        });
+      }
+
+      // 모든 데이터를 처리한 후 스트림 종료
+      controller.close();
+    },
+  });
+};

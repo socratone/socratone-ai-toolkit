@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { streamChatFromDeepSeek, streamChatFromOpenAi } from './utils';
+import {
+  streamChatFromDeepSeek,
+  streamChatFromExaOne,
+  streamChatFromOpenAi,
+} from './utils';
 import { OpenAiModel } from '@/types';
 
 export async function POST(req: NextRequest) {
@@ -23,6 +27,8 @@ export async function POST(req: NextRequest) {
 
     if (model === 'deepseek-r1:7b') {
       stream = await streamChatFromDeepSeek(messages);
+    } else if (model === 'exaone3.5:latest') {
+      stream = await streamChatFromExaOne(messages);
     } else {
       stream = await streamChatFromOpenAi(model, messages);
     }

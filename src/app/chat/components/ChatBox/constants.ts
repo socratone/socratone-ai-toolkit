@@ -27,6 +27,10 @@ export const modelOptions: { value: OpenAiModel; label: string }[] = [
     value: 'deepseek-r1:7b',
   },
   {
+    label: 'exaone3.5:latest',
+    value: 'exaone3.5:latest',
+  },
+  {
     label: 'gpt-4o',
     value: 'gpt-4o',
   },

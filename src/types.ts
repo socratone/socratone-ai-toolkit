@@ -1,4 +1,9 @@
-export type OpenAiModel = 'gpt-4o' | 'gpt-4o-mini' | 'gpt-4' | 'deepseek-r1:7b';
+export type OpenAiModel =
+  | 'gpt-4o'
+  | 'gpt-4o-mini'
+  | 'gpt-4'
+  | 'deepseek-r1:7b'
+  | 'exaone3.5:latest';
 
 export type Message = {
   role: 'system' | 'user' | 'assistant';
