@@ -17,8 +17,10 @@ import {
   FONT_SIZE_STORAGE_KEY,
   MODEL_STORAGE_KEY,
   ASIDE_WIDTH_STORAGE_KEY,
+  BreakpointSize,
 } from '@/constants';
 import useSavedMessages from '../../hooks/useSavedMessages';
+import useScreenSize from '@/hooks/useScreenSize';
 import Checkbox from '@/components/Checkbox';
 import Textarea from '@/components/Textarea';
 import Header from '@/components/Header';
@@ -54,6 +56,8 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
   // aside 너비 상태 (기본값: lg:w-96와 동일한 384px)
   const [asideWidth, setAsideWidth] = useState(384);
   const [isResizing, setIsResizing] = useState(false);
+  // lg 사이즈(1024px) 이상인지 감지
+  const isLargeScreen = useScreenSize(BreakpointSize.LG);
 
   // asideWidth 값 불러오기
   useEffect(() => {
@@ -283,7 +287,7 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
       </div>
       <aside
         ref={asideRef}
-        style={{ width: asideWidth }}
+        style={{ width: isLargeScreen ? asideWidth : undefined }}
         className="relative flex flex-col gap-2 p-3 border-t flex-shrink-0 lg:border-t-0 lg:border-l"
       >
         {/* 리사이징을 위한 드래그 핸들 */}
