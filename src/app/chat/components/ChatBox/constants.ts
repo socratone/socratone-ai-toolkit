@@ -16,10 +16,15 @@ export const systemMessage = {
       모르면 모른다고 해야 해.`,
 };
 
+export const deepseekSystemMessage = {
+  role: 'system',
+  content: '',
+};
+
 export const modelOptions: { value: OpenAiModel; label: string }[] = [
   {
-    label: 'deepseek-chat',
-    value: 'deepseek-chat',
+    label: 'deepseek-r1:7b',
+    value: 'deepseek-r1:7b',
   },
   {
     label: 'gpt-4o',

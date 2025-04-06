@@ -10,7 +10,12 @@ import Select from '@/components/Select';
 import { Message, OpenAiModel } from '@/types';
 import ZoomButton from './ZoomButton';
 import ScrollButton from './ScrollButton';
-import { devSystemMessage, modelOptions, systemMessage } from './constants';
+import {
+  deepseekSystemMessage,
+  devSystemMessage,
+  modelOptions,
+  systemMessage,
+} from './constants';
 import AnimatedButton from '@/components/AnimatedButton';
 import {
   DEV_CHECKED_STORAGE_KEY,
@@ -142,6 +147,12 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
     }
   }, [isLoading]);
 
+  const getSystemMessage = () => {
+    if (selectedModel === 'deepseek-r1:7b') return deepseekSystemMessage;
+    if (devChecked) return devSystemMessage;
+    return systemMessage;
+  };
+
   const sendMessage = async (data: { userMessage: string }) => {
     const userMessage = data.userMessage.trim();
     if (!userMessage) return;
@@ -157,10 +168,7 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: [
-            devChecked ? devSystemMessage : systemMessage,
-            ...updatedMessages,
-          ],
+          messages: [getSystemMessage(), ...updatedMessages],
           model: selectedModel,
         }),
       });

@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
 
     let stream: ReadableStream | null = null;
 
-    if (model === 'deepseek-chat') {
+    if (model === 'deepseek-r1:7b') {
       stream = await streamChatFromDeepSeek(messages);
     } else {
       stream = await streamChatFromOpenAi(model, messages);

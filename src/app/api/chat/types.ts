@@ -1,4 +1,4 @@
-export type Message = {
+export type OpenAiMessage = {
   id: string;
   object: string;
   created: number;
