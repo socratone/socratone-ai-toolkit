@@ -1,4 +1,4 @@
-import { OpenAiModel } from '@/types';
+import { AiModel } from '@/types';
 
 export const devSystemMessage = {
   role: 'system',
@@ -21,7 +21,7 @@ export const deepseekSystemMessage = {
   content: '',
 };
 
-export const modelOptions: { value: OpenAiModel; label: string }[] = [
+export const modelOptions: { value: AiModel; label: string }[] = [
   {
     label: 'deepseek-r1:7b',
     value: 'deepseek-r1:7b',

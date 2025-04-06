@@ -1,4 +1,4 @@
-import { Message, OpenAiModel } from '@/types';
+import { Message, AiModel } from '@/types';
 import { OpenAiMessage } from './types';
 
 /**
@@ -151,7 +151,7 @@ export const streamChatFromDeepSeek = async (messages: Message[]) => {
 };
 
 export const streamChatFromOpenAi = async (
-  model: OpenAiModel,
+  model: AiModel,
   messages: Message[]
 ) => {
   const OPENAI_API_KEY = process.env.OPENAI_API_KEY;

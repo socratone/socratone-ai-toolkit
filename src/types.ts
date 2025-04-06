@@ -1,4 +1,4 @@
-export type OpenAiModel =
+export type AiModel =
   | 'gpt-4o'
   | 'gpt-4o-mini'
   | 'gpt-4'

@@ -4,13 +4,13 @@ import {
   streamChatFromExaOne,
   streamChatFromOpenAi,
 } from './utils';
-import { OpenAiModel } from '@/types';
+import { AiModel } from '@/types';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const messages = body.messages;
-    const model: OpenAiModel = body.model;
+    const model: AiModel = body.model;
 
     if (!model) {
       return NextResponse.json({ error: 'Invalid model.' }, { status: 400 });

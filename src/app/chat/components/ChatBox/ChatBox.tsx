@@ -7,7 +7,7 @@ import UserMessage from './UserMessage';
 import AssistantMessage from './AssistantMessage';
 import EllipsisLoader from '@/components/EllipsisLoader';
 import Select from '@/components/Select';
-import { Message, OpenAiModel } from '@/types';
+import { Message, AiModel } from '@/types';
 import ZoomButton from './ZoomButton';
 import ScrollButton from './ScrollButton';
 import {
@@ -49,8 +49,7 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
   });
   const [fontSize, setFontSize] = useState<FontSize>('text-base');
   const [messages, setMessages] = useState<Message[]>([]);
-  const [selectedModel, setSelectedModel] =
-    useState<OpenAiModel>('gpt-4o-mini');
+  const [selectedModel, setSelectedModel] = useState<AiModel>('gpt-4o-mini');
   const [devChecked, setDevChecked] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -121,7 +120,7 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
   useEffect(() => {
     const savedModel = localStorage.getItem(MODEL_STORAGE_KEY);
     if (typeof savedModel === 'string') {
-      setSelectedModel(savedModel as OpenAiModel);
+      setSelectedModel(savedModel as AiModel);
     }
   }, []);
 
@@ -228,7 +227,7 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
     }
   };
 
-  const handleModelChange = (selectedModel: OpenAiModel) => {
+  const handleModelChange = (selectedModel: AiModel) => {
     localStorage.setItem(MODEL_STORAGE_KEY, selectedModel);
     setSelectedModel(selectedModel);
   };
