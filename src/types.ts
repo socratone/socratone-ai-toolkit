@@ -1,7 +1,7 @@
 export type AiModel =
   | 'gpt-4o'
   | 'gpt-4.1-mini'
-  | 'gpt-4'
+  | 'gpt-4.1'
   | 'deepseek-r1:7b'
   | 'exaone3.5:latest'
   | 'deepseek-to-exaone';
