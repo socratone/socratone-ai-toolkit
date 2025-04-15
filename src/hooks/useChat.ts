@@ -10,7 +10,7 @@ interface Message {
   content: string;
 }
 
-const useChat = ({ onMessageReceived, model = 'gpt-4o-mini' }: ChatParams) => {
+const useChat = ({ onMessageReceived, model = 'gpt-4.1-mini' }: ChatParams) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 

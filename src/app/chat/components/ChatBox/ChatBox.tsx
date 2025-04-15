@@ -49,7 +49,7 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
   });
   const [fontSize, setFontSize] = useState<FontSize>('text-base');
   const [messages, setMessages] = useState<Message[]>([]);
-  const [selectedModel, setSelectedModel] = useState<AiModel>('gpt-4o-mini');
+  const [selectedModel, setSelectedModel] = useState<AiModel>('gpt-4.1-mini');
   const [devChecked, setDevChecked] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);

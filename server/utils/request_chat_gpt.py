@@ -8,7 +8,7 @@ def request_chat_gpt(messages: List[Dict[str, str]]) -> Any:
     """데이터를 받아서 chat gpt에 요청할 때 사용하는 함수입니다."""
     openai_api_key = os.getenv("OPENAI_API_KEY")
 
-    api_request_body = {"model": "gpt-4o-mini", "messages": messages}
+    api_request_body = {"model": "gpt-4.1-mini", "messages": messages}
 
     response = requests.post(
         "https://api.openai.com/v1/chat/completions",

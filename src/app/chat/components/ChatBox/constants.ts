@@ -39,8 +39,8 @@ export const modelOptions: { value: AiModel; label: string }[] = [
     value: 'gpt-4o',
   },
   {
-    label: 'gpt-4o-mini',
-    value: 'gpt-4o-mini',
+    label: 'gpt-4.1-mini',
+    value: 'gpt-4.1-mini',
   },
   {
     label: 'gpt-4',
