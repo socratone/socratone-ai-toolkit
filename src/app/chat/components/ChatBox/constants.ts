@@ -23,6 +23,10 @@ export const deepseekSystemMessage = {
 
 export const modelOptions: { value: AiModel; label: string }[] = [
   {
+    label: 'deepseek-to-exaone',
+    value: 'deepseek-to-exaone',
+  },
+  {
     label: 'deepseek-r1:7b',
     value: 'deepseek-r1:7b',
   },

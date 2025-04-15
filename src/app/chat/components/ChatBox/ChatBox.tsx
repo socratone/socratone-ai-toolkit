@@ -148,6 +148,7 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
 
   const getSystemMessage = () => {
     if (selectedModel === 'deepseek-r1:7b') return deepseekSystemMessage;
+    if (selectedModel === 'deepseek-to-exaone') return deepseekSystemMessage;
     if (devChecked) return devSystemMessage;
     return systemMessage;
   };

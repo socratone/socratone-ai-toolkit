@@ -1,15 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {
+  chatFromDeepSeek,
+  extractThinkContent,
   streamChatFromDeepSeek,
   streamChatFromExaOne,
   streamChatFromOpenAi,
 } from './utils';
-import { AiModel } from '@/types';
+import { AiModel, Message } from '@/types';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const messages = body.messages;
+    const messages: Message[] = body.messages;
     const model: AiModel = body.model;
 
     if (!model) {
@@ -25,7 +27,18 @@ export async function POST(req: NextRequest) {
 
     let stream: ReadableStream | null = null;
 
-    if (model === 'deepseek-r1:7b') {
+    if (model === 'deepseek-to-exaone') {
+      const deepSeekMessage = await chatFromDeepSeek(messages);
+
+      const thinkContent = extractThinkContent(deepSeekMessage);
+
+      if (thinkContent.trim() && messages.length > 0) {
+        const lastMessage = messages[messages.length - 1];
+        lastMessage.content = `${lastMessage.content}\n\n아래 추론 내용을 참고해서 한국말로 답해줘.\n\n${thinkContent}`;
+      }
+
+      stream = await streamChatFromExaOne(messages);
+    } else if (model === 'deepseek-r1:7b') {
       stream = await streamChatFromDeepSeek(messages);
     } else if (model === 'exaone3.5:latest') {
       stream = await streamChatFromExaOne(messages);

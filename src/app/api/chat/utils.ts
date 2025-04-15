@@ -53,7 +53,7 @@ const parseOllamaStreamChunk = (chunk: string): any[] => {
  * DeepSeek 모델에서 비스트리밍 방식으로 채팅 응답을 받는 함수
  * @param messages - 사용자와 AI 간의 대화 메시지 배열
  * @returns 모델의 응답 텍스트
- * TODO: 아직 사용하고 있지 않음
+ * TODO: 성능 개선을 위해 추론만 할 수 있도록 변경
  */
 export const chatFromDeepSeek = async (
   messages: Message[]
@@ -291,4 +291,18 @@ export const streamChatFromExaOne = async (messages: Message[]) => {
       controller.close();
     },
   });
+};
+
+/**
+ * <think> 태그와 </think> 태그 사이의 텍스트를 추출하는 함수
+ * @param text - 추출할 텍스트가 포함된 문자열
+ * @returns <think>와 </think> 사이의 텍스트. 태그가 없는 경우 '' 반환
+ */
+export const extractThinkContent = (text: string): string => {
+  // 정규식을 사용하여 <think>와 </think> 사이의 내용을 추출
+  const regex = /<think>([\s\S]*?)<\/think>/;
+  const match = text.match(regex);
+
+  // 매칭된 결과가 있으면 첫 번째 캡처 그룹(태그 사이의 내용) 반환, 없으면 '' 반환
+  return match ? match[1] : '';
 };
