@@ -1,5 +1,4 @@
 import styles from './AnimatedButton.module.scss';
-import { useEffect, useRef, useState } from 'react';
 import { cn } from '@/utils/cn';
 
 interface AnimatedButtonProps {
@@ -22,34 +21,8 @@ const AnimatedButton = ({
   disabled,
   size = 'medium',
 }: AnimatedButtonProps) => {
-  const buttonRef = useRef<HTMLButtonElement>(null);
-
-  const [backgroundSize, setBackgroundSize] = useState<number | null>(null);
-
-  useEffect(() => {
-    const button = buttonRef.current;
-
-    if (!button) return;
-
-    // 버튼의 너비를 기반으로 배경 크기를 업데이트하는 함수
-    const updateBackgroundSize = () => {
-      setBackgroundSize(button.offsetWidth * 1.5);
-    };
-
-    // ResizeObserver를 생성하여 버튼 크기 변경을 감지
-    const observer = new ResizeObserver(updateBackgroundSize);
-    observer.observe(button);
-
-    updateBackgroundSize();
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [children]);
-
   return (
     <button
-      ref={buttonRef}
       disabled={disabled}
       className={cn(styles.button, 'rounded-md', {
         'bg-gray-200 cursor-not-allowed': disabled,
@@ -58,13 +31,7 @@ const AnimatedButton = ({
       })}
       onClick={onClick}
     >
-      <div
-        className={styles.background}
-        style={{
-          width: backgroundSize ?? '150%',
-          height: backgroundSize ?? '1000%',
-        }}
-      />
+      <div className={styles.background} />
       <span
         className={styles.text}
         style={{ fontSize: size === 'small' ? '16px' : '20px' }}
