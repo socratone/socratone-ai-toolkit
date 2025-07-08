@@ -1,5 +1,5 @@
 import styles from './AnimatedButton.module.scss';
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { cn } from '@/utils/cn';
 
 interface AnimatedButtonProps {
@@ -27,7 +27,7 @@ const AnimatedButton = ({
 
   const [backgroundSize, setBackgroundSize] = useState<number | null>(null);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const updateBackgroundSize = () => {
       if (buttonRef.current?.offsetWidth) {
         setBackgroundSize(buttonRef.current.offsetWidth * 1.5);
