@@ -23,29 +23,29 @@ const AnimatedButton = ({
   size = 'medium',
 }: AnimatedButtonProps) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const observerRef = useRef<ResizeObserver | null>(null);
 
   const [backgroundSize, setBackgroundSize] = useState<number | null>(null);
 
   useEffect(() => {
+    const button = buttonRef.current;
+
+    if (!button) return;
+
+    // 버튼의 너비를 기반으로 배경 크기를 업데이트하는 함수
     const updateBackgroundSize = () => {
-      if (buttonRef.current?.offsetWidth) {
-        setBackgroundSize(buttonRef.current.offsetWidth * 1.5);
-      }
+      setBackgroundSize(button.offsetWidth * 1.5);
     };
 
-    observerRef.current = new ResizeObserver(updateBackgroundSize);
-
-    if (buttonRef.current) {
-      observerRef.current.observe(buttonRef.current);
-    }
+    // ResizeObserver를 생성하여 버튼 크기 변경을 감지
+    const observer = new ResizeObserver(updateBackgroundSize);
+    observer.observe(button);
 
     updateBackgroundSize();
 
     return () => {
-      observerRef.current?.disconnect();
+      observer.disconnect();
     };
-  }, []);
+  }, [children]);
 
   return (
     <button
