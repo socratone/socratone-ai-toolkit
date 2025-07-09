@@ -22,4 +22,4 @@ export enum BreakpointSize {
   XXL = 1536,
 }
 
-export const FLASK_API_URL = 'http://localhost:3100';
+export const FLASK_API_URL = 'http://localhost:5001';
