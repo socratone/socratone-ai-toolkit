@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import {
   chatFromDeepSeek,
   extractThinkContent,
+  streamChatFromAnthropic,
   streamChatFromDeepSeek,
   streamChatFromExaOne,
   streamChatFromOpenAi,
@@ -42,6 +43,8 @@ export async function POST(req: NextRequest) {
       stream = await streamChatFromDeepSeek(messages);
     } else if (model === 'exaone3.5:latest') {
       stream = await streamChatFromExaOne(messages);
+    } else if (model === 'claude-sonnet-4-20250514') {
+      stream = await streamChatFromAnthropic(model, messages);
     } else {
       stream = await streamChatFromOpenAi(model, messages);
     }

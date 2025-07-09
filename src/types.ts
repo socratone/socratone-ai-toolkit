@@ -1,4 +1,5 @@
 export type AiModel =
+  | 'claude-sonnet-4-20250514'
   | 'gpt-4o'
   | 'gpt-4.1-mini'
   | 'gpt-4.1'

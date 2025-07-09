@@ -306,3 +306,102 @@ export const extractThinkContent = (text: string): string => {
   // 매칭된 결과가 있으면 첫 번째 캡처 그룹(태그 사이의 내용) 반환, 없으면 '' 반환
   return match ? match[1] : '';
 };
+
+/**
+ * Anthropic API로부터 스트리밍 챗 응답을 받아 ReadableStream으로 반환합니다.
+ * @param model - 사용할 AI 모델
+ * @param messages - 대화 메시지 배열
+ * @returns ReadableStream 객체
+ */
+export const streamChatFromAnthropic = async (
+  model: AiModel,
+  messages: Message[]
+) => {
+  const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
+  if (!ANTHROPIC_API_KEY) {
+    throw new Error('Anthropic API key is not configured.');
+  }
+
+  // Anthropic API는 'system' 역할을 메시지 배열에서 직접 지원하지 않습니다.
+  // 대신, 최상위 'system' 파라미터를 사용해야 합니다.
+  const systemMessage = messages.find((msg) => msg.role === 'system');
+  const userMessages = messages.filter((msg) => msg.role !== 'system');
+
+  const apiRequestBody = {
+    model, // Anthropic 모델명
+    system: systemMessage?.content, // 시스템 메시지
+    messages: userMessages, // 사용자 및 어시스턴트 메시지
+    max_tokens: 1024, // 최대 토큰 수
+    stream: true, // 스트리밍 활성화
+  };
+
+  const anthropicResponse = await fetch(
+    'https://api.anthropic.com/v1/messages',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify(apiRequestBody),
+    }
+  );
+
+  if (!anthropicResponse.ok) {
+    const errorResponse = await anthropicResponse.json();
+    throw new Error(
+      errorResponse.error.message || 'Failed to fetch from Anthropic.'
+    );
+  }
+
+  return new ReadableStream({
+    async start(controller) {
+      if (!anthropicResponse.body) {
+        throw new Error('anthropicResponse.body is null.');
+      }
+
+      const reader = anthropicResponse.body.getReader();
+      const decoder = new TextDecoder();
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+
+        const eventBlocks = chunk.split('\n\n').filter((block) => block.trim());
+
+        for (const block of eventBlocks) {
+          const lines = block.split('\n');
+          const eventLine = lines.find((line) => line.startsWith('event:'));
+          const dataLine = lines.find((line) => line.startsWith('data:'));
+
+          if (!dataLine) continue;
+
+          const eventType = eventLine
+            ? eventLine.substring(7).trim()
+            : 'message';
+
+          try {
+            const jsonStr = dataLine.substring(5).trim();
+            const parsedData = JSON.parse(jsonStr);
+
+            if (eventType === 'content_block_delta') {
+              if (parsedData.delta?.type === 'text_delta') {
+                const content = parsedData.delta.text;
+                if (content) {
+                  controller.enqueue(content);
+                }
+              }
+            }
+          } catch (e) {
+            console.error('Error parsing Anthropic stream chunk:', e);
+          }
+        }
+      }
+
+      controller.close();
+    },
+  });
+};

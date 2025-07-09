@@ -31,6 +31,7 @@ https://platform.openai.com/settings/organization/api-keys
 
 ```
 OPENAI_API_KEY=???
+ANTHROPIC_API_KEY=???
 FLASK_ENV="production"
 ```
 

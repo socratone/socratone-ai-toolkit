@@ -21,6 +21,10 @@ export const deepseekSystemMessage = {
 
 export const modelOptions: { value: AiModel; label: string }[] = [
   {
+    label: 'claude-sonnet-4',
+    value: 'claude-sonnet-4-20250514',
+  },
+  {
     label: 'deepseek-to-exaone',
     value: 'deepseek-to-exaone',
   },
