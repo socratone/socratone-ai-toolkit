@@ -1,13 +1,13 @@
 'use client';
 
 import Drawer from './Drawer';
-import CloseIcon from './icons/CloseIcon';
+import CloseIcon from './icons/close.svg';
 import Link from 'next/link';
 import useSavedMessages from '../../hooks/useSavedMessages';
 import { useEffect, useState } from 'react';
 import { MessageHistory, MessagesByDateTime } from '@/types';
 import { MESSAGES_STORAGE_KEY } from '@/constants';
-import TrashIcon from './icons/TrashIcon';
+import TrashIcon from './icons/trash.svg';
 import dayjs from 'dayjs';
 
 interface ChatDrawerProps {

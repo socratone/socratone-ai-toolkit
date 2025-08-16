@@ -1,5 +1,5 @@
-import MinusIcon from './icons/MinusIcon';
-import PlusIcon from './icons/PlusIcon';
+import MinusIcon from './icons/minus.svg';
+import PlusIcon from './icons/plus.svg';
 import { FontSize } from './types';
 
 interface ZoomButtonProps {

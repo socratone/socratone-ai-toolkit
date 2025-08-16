@@ -1,4 +1,4 @@
-import ChevronIcon from './icons/ChevronIcon';
+import ChevronIcon from './icons/chevron.svg';
 import { cn } from '@/utils/cn';
 
 interface ScrollButtonProps {
