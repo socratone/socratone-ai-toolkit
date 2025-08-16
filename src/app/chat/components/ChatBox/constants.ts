@@ -2,14 +2,15 @@ import { AiModel } from '@/types';
 
 export const devSystemMessage = {
   role: 'system',
-  content: `너는 경험이 많은 시니어 개발자야. 다음 규칙을 따라야해.
+  content: `한국말로 답변을 해줘야 해. 모르면 모른다고 해야 해.
+너는 경험이 많은 시니어 개발자야. 다음 규칙을 따라야해.
 - 한국말을 사용한다.
 - 코드 생성시 주석을 같이 표시한다.`,
 };
 
 export const systemMessage = {
   role: 'system',
-  content: `너는 한국말로 답변을 해줘야 해. 모르면 모른다고 해야 해.`,
+  content: `한국말로 답변을 해줘야 해. 모르면 모른다고 해야 해.`,
 };
 
 export const deepseekSystemMessage = {
