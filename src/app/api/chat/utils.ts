@@ -2,30 +2,39 @@ import { Message, AiModel } from '@/types';
 import { OpenAiMessage } from './types';
 
 /**
- * 스트리밍 청크를 파싱하는 함수
+ * OpenAI Chat Completions SSE 스트림 한 덩어리(청크)를 파싱하는 함수
+ *
+ * OpenAI는 다음과 같은 형식으로 데이터를 보냅니다.
+ *   data: {"id": "...", "choices": [...]}\n
+ *   data: {"id": "...", "choices": [...]}\n
+ *   data: [DONE]\n
+ *
+ * 이 함수는 한 번 `decoder.decode()`로 나온 문자열을 줄 단위로 잘라서
+ * 각 `data: ...` 라인에서 JSON 부분만 추출한 뒤 `OpenAiMessage`로 변환합니다.
  */
 const parseOpenAIStreamChunk = (chunk: string): OpenAiMessage[] => {
-  // 스트림 데이터를 줄 단위로 분리
+  // 1) 빈 줄 제거 후, `data: ...` 단위로 자르기
   const lines = chunk.split('\n').filter((line) => line.trim() !== '');
 
-  // 각 줄을 처리
+  // 2) 각 줄을 OpenAI SSE 이벤트로 취급하여 파싱
   return lines
     .map((line) => {
-      // [DONE] 라인은 무시
+      // 스트림 종료를 알리는 제어 메시지는 건너뜀
       if (line === 'data: [DONE]') {
         return null;
       }
 
       try {
-        // 'data: ' 제거 후 JSON 파싱
+        // 앞부분의 'data: ' 접두사 제거 후, 나머지를 JSON으로 파싱
         const jsonString = line.replace('data: ', '');
         return JSON.parse(jsonString);
       } catch (error) {
-        console.error('Failed to parse line:', line, error);
+        // 스트림 도중 잘못된 라인이 섞여 들어가더라도 전체 스트림이 멈추지 않도록 방어 코드
+        console.error('Failed to parse OpenAI stream line:', line, error);
         return null; // 파싱 실패 시 null 반환
       }
     })
-    .filter(Boolean); // null 값을 필터링하여 반환
+    .filter(Boolean) as OpenAiMessage[]; // null/undefined 제거 후 반환
 };
 
 /**
@@ -194,17 +203,40 @@ export const streamChatFromOpenAi = async (
 
       // ReadableStreamDefaultReader를 생성하여 스트림 데이터를 읽기 위한 준비
       const reader = openAiResponse.body.getReader();
-      // 바이트 데이터를 문자열로 변환하기 위한 TextDecoder 생성
-      const decoder = new TextDecoder();
+      // 바이트 데이터를 UTF-8 문자열로 변환하기 위한 TextDecoder 생성
+      //
+      // 중요 포인트:
+      // - 한글은 UTF-8에서 2~3바이트 이상의 멀티바이트 문자입니다.
+      // - 네트워크 청크 경계에서 문자가 잘릴 수 있으므로,
+      //   decoder를 루프 밖에서 한 번만 생성하여 내부 버퍼에 불완전한 문자를 보관합니다.
+      const decoder = new TextDecoder('utf-8');
 
       // 스트림 데이터를 반복적으로 읽는 루프
       while (true) {
         // reader.read()를 호출하여 스트림에서 데이터를 읽음
         const { done, value } = await reader.read();
-        // 스트림 끝에 도달하면 반복 종료
-        if (done) break;
+
+        // 스트림 끝에 도달한 경우
+        if (done) {
+          // 마지막으로 decoder 내부 버퍼에 남아 있는 불완전/잔여 바이트를 한 번 더 디코딩
+          // (인자를 주지 않고 decode()를 호출하면 내부 버퍼를 모두 flush 합니다.)
+          const finalChunk = decoder.decode();
+          if (finalChunk) {
+            const parsedMessages = parseOpenAIStreamChunk(finalChunk);
+            parsedMessages.forEach((message) => {
+              const content = message?.choices?.[0]?.delta?.content;
+              if (content) {
+                controller.enqueue(content);
+              }
+            });
+          }
+          break;
+        }
 
         // 읽은 바이트 데이터를 문자열로 디코딩
+        // stream: true 옵션을 주면, 마지막에 잘린 멀티바이트 문자는
+        // 바로 문자열로 만들지 않고 decoder 내부 버퍼에 잠시 보관합니다.
+        // 다음 청크가 들어왔을 때 이어 붙여서 올바른 문자로 디코딩됩니다.
         const chunk = decoder.decode(value, { stream: true });
 
         // 청크 데이터를 파싱하고 메시지를 스트림에 추가
