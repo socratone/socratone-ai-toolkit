@@ -163,7 +163,6 @@ export const streamChatFromOpenAi = async (
   const apiRequestBody = {
     model, // 사용하려는 모델
     messages, // ChatGPT 대화 형식에 맞는 메시지 배열
-    temperature: 0.7, // 응답 다양성을 조절하는 옵션 (0~1)
     stream: true, // 스트리밍을 활성화합니다.
   };
 

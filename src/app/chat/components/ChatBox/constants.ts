@@ -36,6 +36,14 @@ export const modelOptions: { value: AiModel; label: string }[] = [
     value: 'exaone3.5:latest',
   },
   {
+    label: 'gpt-5.1',
+    value: 'gpt-5.1',
+  },
+  {
+    label: 'gpt-5-mini',
+    value: 'gpt-5-mini',
+  },
+  {
     label: 'gpt-4o',
     value: 'gpt-4o',
   },
