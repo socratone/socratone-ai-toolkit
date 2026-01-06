@@ -109,13 +109,22 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
   useEffect(() => {
     if (currentMessageKey) {
       // 저장된 키에 해당하는 messages가 있는 경우
-      if (messagesByDateTime[currentMessageKey]) {
-        setMessages(messagesByDateTime[currentMessageKey]);
+      const savedMessages = messagesByDateTime[currentMessageKey];
+      if (savedMessages) {
+        setMessages(savedMessages);
       } else {
         setMessages([]);
       }
     }
-  }, [currentMessageKey, messagesByDateTime]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentMessageKey]);
+
+  // messages가 변경될 때마다 저장
+  useEffect(() => {
+    if (currentMessageKey && messages.length > 0) {
+      saveMessages(currentMessageKey, messages);
+    }
+  }, [messages, currentMessageKey, saveMessages]);
 
   // model 값 불러오기
   useEffect(() => {
@@ -177,18 +186,10 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
 
       const assistantMessage = data.content;
 
-      setMessages((prevMessages) => {
-        const updatedMessages: Message[] = [
-          ...prevMessages,
-          { role: 'assistant', content: assistantMessage },
-        ];
-
-        if (currentMessageKey) {
-          saveMessages(currentMessageKey, updatedMessages);
-        }
-
-        return updatedMessages;
-      });
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { role: 'assistant', content: assistantMessage },
+      ]);
 
       reset();
     } catch (error) {
