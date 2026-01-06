@@ -29,6 +29,7 @@ import useScreenSize from '@/hooks/useScreenSize';
 import Checkbox from '@/components/Checkbox';
 import Textarea from '@/components/Textarea';
 import Header from '@/components/Header';
+import { postChatGpt } from './utils';
 
 interface ChatBoxProps {
   onOpenMenu: () => void;
@@ -164,52 +165,32 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
     setMessages(updatedMessages);
 
     try {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: [getSystemMessage(), ...updatedMessages],
-          model: selectedModel,
-        }),
+      const response = await postChatGpt(selectedModel, [
+        getSystemMessage(),
+        ...updatedMessages,
+      ]);
+      const data = await response.json();
+
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      const assistantMessage = data.content;
+
+      setMessages((prevMessages) => {
+        const updatedMessages: Message[] = [
+          ...prevMessages,
+          { role: 'assistant', content: assistantMessage },
+        ];
+
+        if (currentMessageKey) {
+          saveMessages(currentMessageKey, updatedMessages);
+        }
+
+        return updatedMessages;
       });
 
-      if (!response.body) {
-        throw new Error('Response body is null.');
-      }
-
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let done = false;
-      let assistantMessage = '';
-
-      while (!done) {
-        const { value, done: readerDone } = await reader.read();
-        done = readerDone;
-
-        if (value) {
-          assistantMessage += decoder.decode(value, { stream: true });
-
-          setMessages((prevMessages) => {
-            // user의 메시지는 그대로 둔다.
-            if (prevMessages[prevMessages.length - 1].role !== 'user') {
-              prevMessages.pop();
-            }
-
-            const updatedMessages: Message[] = [
-              ...prevMessages,
-              { role: 'assistant', content: assistantMessage },
-            ];
-
-            if (currentMessageKey) {
-              saveMessages(currentMessageKey, updatedMessages);
-            }
-
-            return updatedMessages;
-          });
-        }
-      }
-
-      reset(); // 폼 리셋
+      reset();
     } catch (error) {
       console.error('Error sending message:', error);
     } finally {

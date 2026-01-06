@@ -13,3 +13,6 @@ torch
 requests
 
 python-dotenv
+
+langchain==1.2.0
+langchain-openai
