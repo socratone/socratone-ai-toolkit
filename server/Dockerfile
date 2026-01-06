@@ -10,6 +10,9 @@ FROM python:3.10
 # pip 업그레이드
 RUN pip install --upgrade pip
 
+# Python 출력 버퍼링 비활성화 (도커 로그에서 print 문이 즉시 보이도록)
+ENV PYTHONUNBUFFERED=1
+
 # 작업 디렉토리 설정
 WORKDIR /app
 
