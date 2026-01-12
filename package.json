@@ -3,41 +3,23 @@
   "version": "0.2.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "turbo run dev",
+    "build": "turbo run build",
     "start": "npm-run-all --parallel start:frontend start:backend open:browser",
-    "start:frontend": "next start -p 4000",
-    "start:backend": "docker-compose up --build",
+    "start:frontend": "turbo run start --filter=@socratone/web",
+    "start:backend": "cd apps/server && docker-compose up --build",
     "open:browser": "wait-on http://localhost:4000 && open-cli http://localhost:4000",
-    "stop": "docker-compose down",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "clsx": "^2.1.1",
-    "dayjs": "^1.11.13",
-    "next": "^15.5.7",
-    "react": "19.0.0-rc-66855b96-20241106",
-    "react-dom": "19.0.0-rc-66855b96-20241106",
-    "react-hook-form": "^7.53.2",
-    "react-markdown": "^9.0.1",
-    "react-toastify": "^10.0.6",
-    "rehype-highlight": "^7.0.1",
-    "sass": "^1.81.0",
-    "tailwind-merge": "^3.0.1",
-    "zustand": "^5.0.2"
+    "stop": "cd apps/server && docker-compose down",
+    "lint": "turbo run lint"
   },
   "devDependencies": {
-    "@svgr/webpack": "^8.1.0",
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "eslint": "^8.57.0",
-    "eslint-config-next": "15.1.7",
     "npm-run-all": "^4.1.5",
     "open-cli": "^7.2.0",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
-    "typescript": "^5",
+    "turbo": "^2.7.4",
     "wait-on": "^6.0.1"
+  },
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=18"
   }
 }
