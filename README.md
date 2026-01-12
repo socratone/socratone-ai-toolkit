@@ -1,6 +1,6 @@
 # Socratone AI Toolkit
 
-AI를 이용한 도구 모음 웹 어플리케이션 (Turborepo 모노레포)
+AI를 이용한 도구 모음 웹 어플리케이션
 
 .env에 키를 넣고 로컬에서 사용합니다.
 
@@ -41,7 +41,7 @@ socratone-ai-toolkit/
 
 ### Env
 
-`apps/server/.env` 파일에 아래 키를 넣어야 합니다.
+`.env` 파일에 아래 키를 넣어야 합니다.
 
 https://platform.openai.com/settings/organization/api-keys
 
@@ -59,13 +59,13 @@ FLASK_ENV="production"
 pnpm install
 ```
 
-**2\. 개발 모드 (모든 앱)**
+**2\. 개발 모드**
 
 ```bash
 pnpm dev
 ```
 
-**3\. 빌드 (모든 앱)**
+**3\. 빌드**
 
 ```bash
 pnpm build
