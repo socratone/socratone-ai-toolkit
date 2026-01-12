@@ -44,6 +44,7 @@ export const postChatGptStream = async (
   }
 
   const decoder = new TextDecoder();
+  let buffer = '';
 
   try {
     while (true) {
@@ -51,9 +52,11 @@ export const postChatGptStream = async (
 
       if (done) break;
 
-      // 디코딩된 텍스트를 줄 단위로 분리
-      const chunk = decoder.decode(value, { stream: true });
-      const lines = chunk.split('\n');
+      // 버퍼에 새 데이터 추가
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      // 마지막 줄은 불완전할 수 있으므로 버퍼에 유지
+      buffer = lines.pop() || '';
 
       for (const line of lines) {
         // SSE 형식: "data: " 접두사 제거
