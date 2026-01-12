@@ -1,11 +1,16 @@
-# 베이스 이미지로 Python 3.9 사용
-FROM python:3.9
+FROM python:3.10
 
 # 시스템 패키지 업데이트 및 FLAC, FFmpeg 유틸리티 설치
 RUN apt-get update && \
     apt-get install -y flac ffmpeg && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+# pip 업그레이드
+RUN pip install --upgrade pip
+
+# Python 출력 버퍼링 비활성화 (도커 로그에서 print 문이 즉시 보이도록)
+ENV PYTHONUNBUFFERED=1
 
 # 작업 디렉토리 설정
 WORKDIR /app

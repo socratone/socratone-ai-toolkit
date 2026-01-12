@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 interface Option {
   value: string;
   label: string;
+  disabled?: boolean;
 }
 
 interface SelectProps<T> {
@@ -72,17 +73,23 @@ const Select = <T,>({
       {isOpen && (
         <ul className="absolute z-10 w-full bg-white border border-gray-200 mt-1 rounded-md shadow max-h-60 overflow-auto">
           {options.map((option) => (
-            <li
-              key={option.value}
-              onClick={() => {
-                onChange(option.value as T);
-                setIsOpen(false);
-              }}
-              className={cn('px-4 py-2 hover:bg-gray-100 cursor-pointer', {
-                'bg-blue-50': option.value === value,
-              })}
-            >
-              {option.label}
+            <li key={option.value}>
+              <button
+                onClick={() => {
+                  onChange(option.value as T);
+                  setIsOpen(false);
+                }}
+                disabled={option.disabled}
+                className={cn(
+                  'px-4 py-2 hover:bg-gray-100 w-full text-start',
+                  'disabled:text-gray-400 disabled:cursor-not-allowed hover:disabled:bg-white',
+                  {
+                    'bg-blue-50': option.value === value,
+                  }
+                )}
+              >
+                {option.label}
+              </button>
             </li>
           ))}
         </ul>

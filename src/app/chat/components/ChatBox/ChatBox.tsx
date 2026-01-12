@@ -29,6 +29,7 @@ import useScreenSize from '@/hooks/useScreenSize';
 import Checkbox from '@/components/Checkbox';
 import Textarea from '@/components/Textarea';
 import Header from '@/components/Header';
+import { postChatGptStream } from './utils';
 
 interface ChatBoxProps {
   onOpenMenu: () => void;
@@ -108,13 +109,22 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
   useEffect(() => {
     if (currentMessageKey) {
       // 저장된 키에 해당하는 messages가 있는 경우
-      if (messagesByDateTime[currentMessageKey]) {
-        setMessages(messagesByDateTime[currentMessageKey]);
+      const savedMessages = messagesByDateTime[currentMessageKey];
+      if (savedMessages) {
+        setMessages(savedMessages);
       } else {
         setMessages([]);
       }
     }
-  }, [currentMessageKey, messagesByDateTime]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentMessageKey]);
+
+  // messages가 변경될 때마다 저장
+  useEffect(() => {
+    if (currentMessageKey && messages.length > 0) {
+      saveMessages(currentMessageKey, messages);
+    }
+  }, [messages, currentMessageKey, saveMessages]);
 
   // model 값 불러오기
   useEffect(() => {
@@ -163,55 +173,38 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
     const updatedMessages = [...messages, newMessage];
     setMessages(updatedMessages);
 
+    // 빈 assistant 메시지를 미리 추가 (스트리밍으로 채워질 예정)
+    const assistantMessageIndex = updatedMessages.length;
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { role: 'assistant', content: '' },
+    ]);
+
     try {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: [getSystemMessage(), ...updatedMessages],
-          model: selectedModel,
-        }),
-      });
+      let accumulatedContent = '';
 
-      if (!response.body) {
-        throw new Error('Response body is null.');
-      }
-
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let done = false;
-      let assistantMessage = '';
-
-      while (!done) {
-        const { value, done: readerDone } = await reader.read();
-        done = readerDone;
-
-        if (value) {
-          assistantMessage += decoder.decode(value, { stream: true });
-
+      await postChatGptStream(
+        selectedModel,
+        [getSystemMessage(), ...updatedMessages],
+        (chunk) => {
+          // 각 청크를 누적하여 메시지 업데이트
+          accumulatedContent += chunk;
           setMessages((prevMessages) => {
-            // user의 메시지는 그대로 둔다.
-            if (prevMessages[prevMessages.length - 1].role !== 'user') {
-              prevMessages.pop();
-            }
-
-            const updatedMessages: Message[] = [
-              ...prevMessages,
-              { role: 'assistant', content: assistantMessage },
-            ];
-
-            if (currentMessageKey) {
-              saveMessages(currentMessageKey, updatedMessages);
-            }
-
-            return updatedMessages;
+            const newMessages = [...prevMessages];
+            newMessages[assistantMessageIndex] = {
+              role: 'assistant',
+              content: accumulatedContent,
+            };
+            return newMessages;
           });
         }
-      }
+      );
 
-      reset(); // 폼 리셋
+      reset();
     } catch (error) {
       console.error('Error sending message:', error);
+      // 에러 발생 시 마지막 assistant 메시지 제거
+      setMessages((prevMessages) => prevMessages.slice(0, -1));
     } finally {
       setIsLoading(false);
     }
