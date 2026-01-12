@@ -1,5 +1,8 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, Response, stream_with_context
 from langchain.agents import create_agent
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
+import os
 
 
 chat_gpt_blueprint = Blueprint("chat_gpt", __name__)
@@ -61,3 +64,60 @@ def chat_gpt():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+@chat_gpt_blueprint.route("/chat-gpt/stream", methods=["POST"])
+def chat_gpt_stream():
+    """chat gpt에 메시지를 스트리밍 방식으로 전송하는 API입니다."""
+    data = request.json
+    model = data.get("model")
+    messages = data.get("messages")
+
+    def generate():
+        """스트리밍 응답을 생성하는 제너레이터 함수"""
+        try:
+            # ChatOpenAI를 직접 사용하여 토큰 단위 스트리밍
+            llm = ChatOpenAI(
+                model=model,
+                temperature=0.7,
+                streaming=True,
+                api_key=os.getenv("OPENAI_API_KEY"),
+            )
+
+            # 메시지를 LangChain 형식으로 변환
+            langchain_messages = []
+            for msg in messages:
+                if msg["role"] == "system":
+                    langchain_messages.append(SystemMessage(content=msg["content"]))
+                elif msg["role"] == "user":
+                    langchain_messages.append(HumanMessage(content=msg["content"]))
+                elif msg["role"] == "assistant":
+                    langchain_messages.append(AIMessage(content=msg["content"]))
+
+            chunk_count = 0
+
+            # stream() 메서드로 토큰 단위 스트리밍
+            for chunk in llm.stream(langchain_messages):
+                chunk_count += 1
+                # chunk는 AIMessageChunk 객체
+                if hasattr(chunk, "content") and chunk.content:
+                    content = chunk.content
+                    # Server-Sent Events 형식으로 데이터 전송
+                    yield f"data: {content}\n\n"
+
+            # 스트리밍 종료 신호
+            yield "data: [DONE]\n\n"
+
+        except Exception as e:
+            # 에러 발생 시 에러 메시지 전송
+            print(f"[STREAM] 에러 발생: {str(e)}")
+            import traceback
+
+            print(f"[STREAM] 스택 트레이스:\n{traceback.format_exc()}")
+            yield f'data: {{"error": "{str(e)}"}}\n\n'
+
+    return Response(
+        stream_with_context(generate()),
+        mimetype="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )

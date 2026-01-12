@@ -29,7 +29,7 @@ import useScreenSize from '@/hooks/useScreenSize';
 import Checkbox from '@/components/Checkbox';
 import Textarea from '@/components/Textarea';
 import Header from '@/components/Header';
-import { postChatGpt } from './utils';
+import { postChatGptStream } from './utils';
 
 interface ChatBoxProps {
   onOpenMenu: () => void;
@@ -173,27 +173,38 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
     const updatedMessages = [...messages, newMessage];
     setMessages(updatedMessages);
 
+    // 빈 assistant 메시지를 미리 추가 (스트리밍으로 채워질 예정)
+    const assistantMessageIndex = updatedMessages.length;
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { role: 'assistant', content: '' },
+    ]);
+
     try {
-      const response = await postChatGpt(selectedModel, [
-        getSystemMessage(),
-        ...updatedMessages,
-      ]);
-      const data = await response.json();
+      let accumulatedContent = '';
 
-      if (data.error) {
-        throw new Error(data.error);
-      }
-
-      const assistantMessage = data.content;
-
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { role: 'assistant', content: assistantMessage },
-      ]);
+      await postChatGptStream(
+        selectedModel,
+        [getSystemMessage(), ...updatedMessages],
+        (chunk) => {
+          // 각 청크를 누적하여 메시지 업데이트
+          accumulatedContent += chunk;
+          setMessages((prevMessages) => {
+            const newMessages = [...prevMessages];
+            newMessages[assistantMessageIndex] = {
+              role: 'assistant',
+              content: accumulatedContent,
+            };
+            return newMessages;
+          });
+        }
+      );
 
       reset();
     } catch (error) {
       console.error('Error sending message:', error);
+      // 에러 발생 시 마지막 assistant 메시지 제거
+      setMessages((prevMessages) => prevMessages.slice(0, -1));
     } finally {
       setIsLoading(false);
     }
