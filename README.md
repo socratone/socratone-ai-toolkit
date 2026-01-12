@@ -13,8 +13,6 @@ socratone-ai-toolkit/
 ├── apps/
 │   ├── web/              # Next.js 프론트엔드
 │   └── server/           # Flask 백엔드
-├── packages/
-│   └── shared-types/     # 공유 타입 및 상수
 ├── turbo.json
 └── pnpm-workspace.yaml
 ```
