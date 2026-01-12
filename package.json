@@ -7,9 +7,9 @@
     "build": "turbo run build",
     "start": "npm-run-all --parallel start:frontend start:backend open:browser",
     "start:frontend": "turbo run start --filter=@socratone/web",
-    "start:backend": "cd apps/server && docker-compose up --build",
+    "start:backend": "docker-compose -f apps/server/docker-compose.yml up --build",
     "open:browser": "wait-on http://localhost:4000 && open-cli http://localhost:4000",
-    "stop": "cd apps/server && docker-compose down",
+    "stop": "docker-compose -f apps/server/docker-compose.yml down",
     "lint": "turbo run lint"
   },
   "devDependencies": {
