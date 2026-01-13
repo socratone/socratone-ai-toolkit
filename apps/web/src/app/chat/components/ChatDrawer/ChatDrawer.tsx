@@ -115,12 +115,20 @@ const ChatDrawer = ({ open, onClose }: ChatDrawerProps) => {
         </ul>
 
         <footer className="mt-auto bg-white py-2 sticky bottom-0 border-t">
-          <Link
-            className="min-h-8 px-2 flex items-center text-lg font-medium"
-            href="https://platform.openai.com/settings/organization/usage"
-          >
-            사용량 확인
-          </Link>
+          <div className="flex flex-col">
+            <Link
+              className="min-h-8 px-2 flex items-center text-lg font-medium"
+              href="https://platform.openai.com/settings/organization/usage"
+            >
+              OpenAI 사용량
+            </Link>
+            <Link
+              className="min-h-8 px-2 flex items-center text-lg font-medium"
+              href="https://platform.claude.com/usage"
+            >
+              Claude 사용량
+            </Link>
+          </div>
         </footer>
       </div>
     </Drawer>
