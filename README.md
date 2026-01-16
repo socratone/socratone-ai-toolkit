@@ -57,11 +57,13 @@ FLASK_ENV="production"
 pnpm install
 ```
 
-**2\. 개발 모드**
+**2\. 개발 모드 실행**
 
 ```bash
 pnpm dev
 ```
+
+웹 앱만 개발 모드로 실행합니다.
 
 **3\. 빌드**
 
@@ -69,13 +71,41 @@ pnpm dev
 pnpm build
 ```
 
+웹 앱을 빌드합니다.
+
 **4\. 프로덕션 실행**
 
 ```bash
 pnpm start
 ```
 
-**5\. 링크**
+서버를 실행합니다.
+
+**5\. 웹 앱만 실행**
+
+```bash
+pnpm start:web
+```
+
+웹 앱만 프로덕션 모드로 실행합니다.
+
+**6\. 서버 중지**
+
+```bash
+pnpm stop
+```
+
+서버를 중지합니다.
+
+**7\. 린트 검사**
+
+```bash
+pnpm lint
+```
+
+코드 린트 검사를 실행합니다.
+
+**8\. 링크**
 
 http://localhost:4000
 
