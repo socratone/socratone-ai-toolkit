@@ -292,10 +292,12 @@ const ChatBox = ({ onOpenMenu }: ChatBoxProps) => {
         className="relative flex flex-col gap-2 p-3 border-t flex-shrink-0 lg:border-t-0 lg:border-l"
       >
         {/* 리사이징을 위한 드래그 핸들 */}
-        <div
-          className="absolute z-50 left-[-2px] top-0 w-[4px] h-full cursor-col-resize hover:bg-blue-300 active:bg-blue-300 transition-colors"
+        <button
+          className="group absolute z-50 left-[0px] top-0 w-[12px] h-full cursor-col-resize flex"
           onMouseDown={() => setIsResizing(true)}
-        />
+        >
+          <span className="group-hover:bg-blue-300 active:bg-blue-300 transition-colors w-[6px] h-full" />
+        </button>
         <ScrollButton
           direction="down"
           onClick={handleScrollButtonClick}
