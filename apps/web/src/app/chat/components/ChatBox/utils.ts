@@ -78,8 +78,14 @@ export const postChatGptStream = async (
               onChunk(data);
             }
           } else {
-            // 정상 데이터 전달
-            onChunk(data);
+            // 정상 데이터 전달 - JSON으로 인코딩된 문자열을 파싱
+            try {
+              const parsedData = JSON.parse(data);
+              onChunk(parsedData);
+            } catch {
+              // JSON 파싱 실패 시 원본 데이터 전달
+              onChunk(data);
+            }
           }
         }
       }

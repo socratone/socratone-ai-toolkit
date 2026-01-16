@@ -3,6 +3,7 @@ from langchain.agents import create_agent
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 import os
+import json
 
 
 chat_gpt_blueprint = Blueprint("chat_gpt", __name__)
@@ -103,7 +104,8 @@ def chat_gpt_stream():
                 if hasattr(chunk, "content") and chunk.content:
                     content = chunk.content
                     # Server-Sent Events 형식으로 데이터 전송
-                    yield f"data: {content}\n\n"
+                    # JSON으로 인코딩하여 줄바꿈 문자 등 특수문자 처리
+                    yield f"data: {json.dumps(content)}\n\n"
 
             # 스트리밍 종료 신호
             yield "data: [DONE]\n\n"
