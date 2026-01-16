@@ -119,12 +119,16 @@ const ChatDrawer = ({ open, onClose }: ChatDrawerProps) => {
             <Link
               className="min-h-8 px-2 flex items-center text-lg font-medium"
               href="https://platform.openai.com/settings/organization/usage"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               OpenAI 사용량
             </Link>
             <Link
               className="min-h-8 px-2 flex items-center text-lg font-medium"
               href="https://platform.claude.com/usage"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               Claude 사용량
             </Link>
