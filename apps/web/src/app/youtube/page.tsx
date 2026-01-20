@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import AnimatedButton from '@/components/AnimatedButton';
+import { AnimatedButton } from '@socratone/ui';
 import EllipsisLoader from '@/components/EllipsisLoader';
 import Select from '@/components/Select';
 import TextInput from '@/components/TextInput';

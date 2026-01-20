@@ -1,5 +1,5 @@
 import styles from './AnimatedButton.module.scss';
-import { cn } from '@/utils/cn';
+import { cn } from '../../utils/cn';
 
 interface AnimatedButtonProps {
   children: React.ReactNode;

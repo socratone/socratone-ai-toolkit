@@ -16,7 +16,7 @@ import {
   modelOptions,
   systemMessage,
 } from './constants';
-import AnimatedButton from '@/components/AnimatedButton';
+import { AnimatedButton } from '@socratone/ui';
 import {
   DEV_CHECKED_STORAGE_KEY,
   FONT_SIZE_STORAGE_KEY,

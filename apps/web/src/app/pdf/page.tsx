@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import AnimatedButton from '@/components/AnimatedButton';
+import { AnimatedButton } from '@socratone/ui';
 import { FLASK_API_URL } from '@/constants';
 import Header from '@/components/Header';
 
