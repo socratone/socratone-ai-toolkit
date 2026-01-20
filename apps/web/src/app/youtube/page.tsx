@@ -1,10 +1,8 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import AnimatedButton from '@/components/AnimatedButton';
+import { AnimatedButton, Select, TextInput } from '@socratone/ui';
 import EllipsisLoader from '@/components/EllipsisLoader';
-import Select from '@/components/Select';
-import TextInput from '@/components/TextInput';
 import { ASR_MODEL_STORAGE_KEY, FLASK_API_URL } from '@/constants';
 import { modelOptions } from './constants';
 import { AsrModel } from '@/types';

@@ -6,7 +6,7 @@ import { FontSize } from './types';
 import UserMessage from './UserMessage';
 import AssistantMessage from './AssistantMessage';
 import EllipsisLoader from '@/components/EllipsisLoader';
-import Select from '@/components/Select';
+import { Select, Checkbox, Textarea } from '@socratone/ui';
 import { Message, AiModel } from '@/types';
 import ZoomButton from './ZoomButton';
 import ScrollButton from './ScrollButton';
@@ -16,7 +16,7 @@ import {
   modelOptions,
   systemMessage,
 } from './constants';
-import AnimatedButton from '@/components/AnimatedButton';
+import { AnimatedButton } from '@socratone/ui';
 import {
   DEV_CHECKED_STORAGE_KEY,
   FONT_SIZE_STORAGE_KEY,
@@ -26,8 +26,6 @@ import {
 } from '@/constants';
 import useSavedMessages from '../../hooks/useSavedMessages';
 import useScreenSize from '@/hooks/useScreenSize';
-import Checkbox from '@/components/Checkbox';
-import Textarea from '@/components/Textarea';
 import Header from '@/components/Header';
 import { postChatGptStream } from './utils';
 

@@ -46,3 +46,5 @@ apps/server/models/
 
 # turbo
 .turbo
+*storybook.log
+storybook-static

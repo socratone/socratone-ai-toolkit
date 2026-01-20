@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '@/utils/cn';
+import { cn } from '../../utils/cn';
 
 interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   fullWidth?: boolean;

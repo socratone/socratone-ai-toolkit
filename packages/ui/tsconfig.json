@@ -1,0 +1,52 @@
+{
+  // TypeScript 컴파일러 설정
+  // React 컴포넌트 라이브러리를 위한 설정입니다.
+  "compilerOptions": {
+    // target: 컴파일된 JS의 ECMAScript 버전
+    "target": "ES2020",
+
+    // lib: 사용할 타입 정의 라이브러리
+    // DOM API와 ES2020 기능을 사용할 수 있습니다.
+    "lib": ["dom", "dom.iterable", "ES2020"],
+
+    // allowJs: JS 파일도 컴파일에 포함
+    "allowJs": true,
+
+    // skipLibCheck: node_modules 타입 체크 생략 (빌드 속도 향상)
+    "skipLibCheck": true,
+
+    // strict: 엄격한 타입 체크 활성화
+    "strict": true,
+
+    // noEmit: JS 파일 생성하지 않음 (타입 체크만 수행)
+    // Vite가 번들링을 담당하므로 TypeScript는 타입 체크만 합니다.
+    "noEmit": true,
+
+    // esModuleInterop: CommonJS 모듈을 ES 모듈처럼 import 가능
+    "esModuleInterop": true,
+
+    // module: 모듈 시스템 (ESNext = ES 모듈)
+    "module": "ESNext",
+
+    // moduleResolution: 모듈 해석 방식 (bundler = Vite 등 번들러 최적화)
+    "moduleResolution": "bundler",
+
+    // resolveJsonModule: JSON 파일 import 허용
+    "resolveJsonModule": true,
+
+    // isolatedModules: 각 파일을 독립적으로 컴파일 (번들러 호환성)
+    "isolatedModules": true,
+
+    // jsx: JSX 변환 방식 (react-jsx = React 17+ 자동 런타임)
+    "jsx": "react-jsx",
+
+    // incremental: 증분 컴파일 활성화 (빌드 속도 향상)
+    "incremental": true
+  },
+
+  // include: 컴파일에 포함할 파일 경로
+  "include": ["src/**/*"],
+
+  // exclude: 컴파일에서 제외할 경로
+  "exclude": ["node_modules"]
+}

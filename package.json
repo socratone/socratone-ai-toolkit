@@ -8,13 +8,14 @@
     "start": "docker-compose -f apps/server/docker-compose.yml up --build",
     "start:web": "turbo run start --filter=@socratone/web --ui stream",
     "stop": "docker-compose -f apps/server/docker-compose.yml down",
-    "lint": "turbo run lint"
+    "lint": "turbo run lint",
+    "storybook": "pnpm --filter @socratone/ui storybook"
   },
   "devDependencies": {
     "turbo": "^2.7.4"
   },
   "packageManager": "pnpm@9.15.0",
   "engines": {
-    "node": ">=18"
+    "node": ">=22.22.0"
   }
 }
