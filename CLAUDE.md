@@ -16,16 +16,16 @@ Primary language for UI/comments is Korean.
 ```bash
 # Development
 pnpm dev              # Start Next.js dev server with Turbo (http://localhost:4000)
-pnpm start            # Start full stack with Docker (Flask on port 5001)
-pnpm stop             # Stop Docker services
+
+# Production
+pnpm start            # Start server + web simultaneously
+pnpm start:server     # Start Flask server only (Docker, port 5001)
+pnpm start:web        # Start Next.js only (port 4000)
+pnpm stop:server      # Stop Flask server (Docker)
 
 # Build & Lint
 pnpm build            # Production build
 pnpm lint             # ESLint (Flat Config format)
-pnpm start:web        # Production Next.js server on port 4000
-
-# Flask backend (in apps/server)
-docker-compose up     # Start Flask API
 ```
 
 ## Architecture

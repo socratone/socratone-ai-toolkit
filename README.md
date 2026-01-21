@@ -79,35 +79,39 @@ pnpm build
 pnpm start
 ```
 
-서버를 실행합니다.
+서버와 웹 앱을 동시에 실행합니다.
 
-**5\. 웹 앱만 실행**
+**5\. 서버만 실행**
+
+```bash
+pnpm start:server
+```
+
+Flask 서버만 실행합니다. (Docker, port 5001)
+
+**6\. 웹 앱만 실행**
 
 ```bash
 pnpm start:web
 ```
 
-웹 앱만 프로덕션 모드로 실행합니다.
+웹 앱만 프로덕션 모드로 실행합니다. (port 4000)
 
-**6\. 서버 중지**
+**7\. 서버 중지**
 
 ```bash
-pnpm stop
+pnpm stop:server
 ```
 
-서버를 중지합니다.
+Flask 서버를 중지합니다.
 
-**7\. 린트 검사**
+**8\. 린트 검사**
 
 ```bash
 pnpm lint
 ```
 
 코드 린트 검사를 실행합니다.
-
-**8\. 링크**
-
-http://localhost:4000
 
 ## Open AI 토큰 사용량 확인
 

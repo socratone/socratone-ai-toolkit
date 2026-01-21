@@ -5,13 +5,15 @@
   "scripts": {
     "dev": "turbo run dev --ui stream",
     "build": "turbo run build",
-    "start": "docker-compose -f apps/server/docker-compose.yml up --build",
+    "start": "concurrently \"pnpm start:server\" \"pnpm start:web\"",
+    "start:server": "docker-compose -f apps/server/docker-compose.yml up --build",
     "start:web": "turbo run start --filter=@socratone/web --ui stream",
-    "stop": "docker-compose -f apps/server/docker-compose.yml down",
+    "stop:server": "docker-compose -f apps/server/docker-compose.yml down",
     "lint": "turbo run lint",
     "storybook": "pnpm --filter @socratone/ui storybook"
   },
   "devDependencies": {
+    "concurrently": "^9.2.1",
     "turbo": "^2.7.4"
   },
   "packageManager": "pnpm@9.15.0",
